@@ -1,0 +1,8 @@
+﻿<UserControl x:Class="ResourcePlanner.Views.Homescreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="450" Width="800">
+    <Grid Background="LightBlue">
+        <TextBlock Text="This is the homescreen" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+    </Grid>
+</UserControl>
