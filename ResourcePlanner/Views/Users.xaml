@@ -8,14 +8,34 @@
         Height="450" Width="800">
     <Grid Background="LightBlue">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1.5*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="This is the user view" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" 
-                   FontSize="24"
-                   Grid.Column="1"/>
-        <ListView/>
+        <ListView Grid.Column="0"/>
+        <StackPanel Grid.Column="1">
+            <Label Content="Create new user" FontSize="28" Width="Auto" Margin="0,0,0,50"/>
+            <Label Content="Enter the name"/>
+            <TextBox Margin="10,0,10,0"/>
+            <Label Content="Enter email"/>
+            <TextBox Margin="10,0,10,0"/>
+            <Label Content="Enter phone number"/>
+            <TextBox Margin="10,0,10,0"/>
+            <Label Content="Choose the role"/>
+            <Menu>
+                <MenuItem Name="User"/>
+                <MenuItem/>
+            </Menu>
+            
+        </StackPanel>
+        <Grid Grid.Column="2">
+            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <Label Content="Enter the username"/>
+                <TextBox Margin="10,0,10,0"/>
+                <Label Content="Enter the password"/>
+                <TextBox Margin="10,0,10,0"/>
+            </StackPanel>
+                <Button Content="Save" VerticalAlignment="Bottom"/>
+        </Grid>
     </Grid>
 </UserControl>

@@ -4,6 +4,33 @@
              xmlns:local="clr-namespace:ResourcePlanner"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Window">
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Arial"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Arial"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="MinWidth" Value="50"/>
+            <Setter Property="Height" Value="30"/>
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5"/>
+                </Style>
+            </Style.Resources>
+        </Style>
     </Application.Resources>
 </Application>

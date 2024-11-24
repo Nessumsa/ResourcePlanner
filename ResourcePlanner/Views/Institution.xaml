@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:ResourcePlanner.Views"
         mc:Ignorable="d"
         Height="450" Width="800">
+    <UserControl.Resources>
+        
+        
+    </UserControl.Resources>
     <Grid Background="LightBlue">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
@@ -22,12 +22,19 @@
                    Text="This is the institution view" 
                    HorizontalAlignment="Center"  
                    FontSize="24"/>
-        <Label Content="Start tid" Grid.Column="0" Grid.Row="1"/>
-        <TextBox Grid.Column="1" Grid.Row="1"/>
-        <Label Content="Slut tid" Grid.Column="0" Grid.Row="2"/>
-        <TextBox Grid.Column="1" Grid.Row="2"/>
-        <Label Content="Interval" Grid.Column="0" Grid.Row="3"/>
-        <TextBox Grid.Column="1" Grid.Row="3"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label Content="Start tid"/>
+            <TextBox/>
+        </StackPanel>
+        <StackPanel Grid.Row="2"  Orientation="Horizontal">
+            <Label Content="Slut tid"/>
+            <TextBox/>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <Label Content="Interval"/>
+            <TextBox/>
+        </StackPanel>
+        
         <Button Content="Save" Grid.Column="1" Grid.Row="4" Click="Save_Button_Click"/>
     </Grid>
 </UserControl>

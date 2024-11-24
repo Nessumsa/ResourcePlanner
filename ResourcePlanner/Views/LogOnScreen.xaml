@@ -5,20 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner.Views"
         mc:Ignorable="d"
-        Height="300" Width="200">
-    <UserControl.Resources>
-        <Style TargetType="Label">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="Background" Value="Lightblue"/>
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        </Style>
-    </UserControl.Resources>
-    <StackPanel HorizontalAlignment="Center">
+        Height="NaN" Width="NaN">
+    <StackPanel>
         <Label Content="Program name"/>
         <Label Content="Login"/>
         <Label Content="Username" Margin="10"/>

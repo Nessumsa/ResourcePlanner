@@ -5,17 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner.Views"
         mc:Ignorable="d"
-        Height="450" Width="800">
+        Name="UserControl"
+        Height="Auto" Width="Auto">
     <Grid Background="LightBlue">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="1.5*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="This is the resources view" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" 
-                   FontSize="24"
-                   Grid.Column="1"/>
-        <ListView/>
+        <StackPanel Grid.Column="1">
+            <Label Content="Create new resource" FontSize="28" Width="Auto" Margin="0,0,0,50"/>
+            <Label Content="Enter the name of the resource" Width="Auto"/>
+            <TextBox Width="Auto" Margin="10,0,10,10"/>
+            <Label Content="Write a description" Width="Auto"/>
+            <TextBox Width="Auto" Height="Auto" Margin="10,0,10,0"/>
+        </StackPanel>
+        <Grid Grid.Column="2">
+            <StackPanel Grid.Row="0">
+                <Image Source="/Media/placeHolder.jpg"/>
+                <Label Content="Choose a picture"/>
+                <TextBox Width="Auto" Margin="10,0,10,10"/>
+                <Button Content="Choose"/>
+            </StackPanel>
+            <Button Content="Save" Grid.Row="1" VerticalAlignment="Bottom" Margin="0,0,0,10"/>
+        </Grid>
+            <ListView/>
     </Grid>
 </UserControl>
