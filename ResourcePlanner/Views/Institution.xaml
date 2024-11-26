@@ -3,38 +3,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ResourcePlanner.Views"
+        xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
         mc:Ignorable="d"
-        Height="450" Width="800">
-    <UserControl.Resources>
-        
-        
-    </UserControl.Resources>
+        Height="Auto" Width="Auto">
+    <UserControl.DataContext>
+        <local:InstitutionViewModel/>
+    </UserControl.DataContext>
     <Grid Background="LightBlue">
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"
-                   Text="This is the institution view" 
-                   HorizontalAlignment="Center"  
-                   FontSize="24"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label Content="Start tid"/>
-            <TextBox/>
+        <StackPanel Grid.Row="0">
+            <Label 
+                    Content="This is the institution view" 
+                    HorizontalAlignment="Center"  
+                    FontSize="24"
+                    Width="Auto"/>
+            <Label Content="Start time"/>
+            <TextBox Text="{Binding institution.StartTime}"/>
+            <Label Content="Slut time"/>
+            <TextBox Text="{Binding institution.EndTime}"/>
+            <Label Content="Time interval"/>
+            <TextBox Text="{Binding institution.TimeInterval}"/>
+
         </StackPanel>
-        <StackPanel Grid.Row="2"  Orientation="Horizontal">
-            <Label Content="Slut tid"/>
-            <TextBox/>
-        </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal">
-            <Label Content="Interval"/>
-            <TextBox/>
-        </StackPanel>
-        
-        <Button Content="Save" Grid.Column="1" Grid.Row="4" Click="Save_Button_Click"/>
+        <Button     Grid.Row="1"
+                    Content="Save" 
+                    Click="Save_Button_Click" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>

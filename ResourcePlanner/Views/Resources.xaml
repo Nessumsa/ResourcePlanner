@@ -3,32 +3,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ResourcePlanner.Views"
+        xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
         mc:Ignorable="d"
         Name="UserControl"
         Height="Auto" Width="Auto">
+    <UserControl.DataContext>
+        <local:ResourcesViewModel/>
+    </UserControl.DataContext>
     <Grid Background="LightBlue">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="1.5*"/>
             <ColumnDefinition Width="1.5*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="1">
-            <Label Content="Create new resource" FontSize="28" Width="Auto" Margin="0,0,0,50"/>
-            <Label Content="Enter the name of the resource" Width="Auto"/>
-            <TextBox Width="Auto" Margin="10,0,10,10"/>
-            <Label Content="Write a description" Width="Auto"/>
-            <TextBox Width="Auto" Height="Auto" Margin="10,0,10,0"/>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="50" Height="*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ListView Grid.RowSpan="3"/>
+        <Label Content="Create new resource" 
+               FontSize="28" 
+               Grid.Column="1" 
+               Grid.ColumnSpan="2"/>
+        <StackPanel Grid.Column="1" 
+                    Grid.Row="1"
+                    HorizontalAlignment="Center">
+            <Label Content="Enter the name of the resource"/>
+            <TextBox/>
+            <Label Content="Write a description"/>
+            <TextBox/>
         </StackPanel>
-        <Grid Grid.Column="2">
-            <StackPanel Grid.Row="0">
+        <Grid Grid.Column="2" 
+              Grid.Row="1">
+            <StackPanel Grid.Row="0"
+                        HorizontalAlignment="Center">
                 <Image Source="/Media/placeHolder.jpg"/>
                 <Label Content="Choose a picture"/>
-                <TextBox Width="Auto" Margin="10,0,10,10"/>
+                <TextBox Width="Auto"/>
                 <Button Content="Choose"/>
             </StackPanel>
-            <Button Content="Save" Grid.Row="1" VerticalAlignment="Bottom" Margin="0,0,0,10"/>
+            
         </Grid>
-            <ListView/>
+        <Grid       Grid.Row="2"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2">
+            <Button Content="Save"  
+                    VerticalAlignment="Bottom" 
+                    HorizontalAlignment="Right"/>
+            <Button Content="Setup new resource"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Left"/>
+        </Grid>
     </Grid>
 </UserControl>

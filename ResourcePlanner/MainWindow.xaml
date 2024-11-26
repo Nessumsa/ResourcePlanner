@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-
+        Title="MainWindow" Height="Auto" Width="Auto"
+        MaxWidth="1100" MaxHeight="600"
+        MinWidth="700" MinHeight="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,7 +20,6 @@
             <Button Content="Users" Command="{Binding NavigateCommand}" CommandParameter="Users" Margin="5"/>
             <Button Content="Institution" Command="{Binding NavigateCommand}" CommandParameter="Institution" Margin="5"/>
         </StackPanel>
-
         <ContentControl Content="{Binding CurrentView}" Grid.Row="1"/>
     </Grid>
 </Window>

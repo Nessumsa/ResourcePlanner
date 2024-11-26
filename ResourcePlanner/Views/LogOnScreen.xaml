@@ -3,17 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ResourcePlanner.Views"
+        xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
         mc:Ignorable="d"
-        Height="NaN" Width="NaN">
-    <StackPanel>
-        <Label Content="Program name"/>
-        <Label Content="Login"/>
-        <Label Content="Username" Margin="10"/>
+        Height="Auto" Width="Auto">
+    <UserControl.DataContext>
+        <local:LogOnScreenViewModel/>
+    </UserControl.DataContext>
+    <StackPanel Background="LightBlue">
+        <Label Content="Program name" FontSize="48"/>
+        <Label Content="Login" Margin="0,30,0,0"/>
+        <Label Content="Username" Margin="0,30,0,0"/>
         <TextBox/>
-        <Label Content="Password" Margin="10"/>
+        <Label Content="Password"/>
         <TextBox/>
-        <Button Content="Login" Margin="15"/>
-        <Button Content="Forgot password?" Margin="20"/>
+        <Button Content="Login"/>
+        <Button Content="Forgot password?"/>
     </StackPanel>
 </UserControl>

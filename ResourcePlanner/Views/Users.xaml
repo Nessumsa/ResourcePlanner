@@ -3,39 +3,66 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ResourcePlanner.Views"
+        xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
         mc:Ignorable="d"
-        Height="450" Width="800">
+        Height="Auto" Width="Auto">
+    <UserControl.DataContext>
+        <local:UsersViewModel/>
+    </UserControl.DataContext>
     <Grid Background="LightBlue">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="1.5*"/>
             <ColumnDefinition Width="1.5*"/>
         </Grid.ColumnDefinitions>
-        <ListView Grid.Column="0"/>
-        <StackPanel Grid.Column="1">
-            <Label Content="Create new user" FontSize="28" Width="Auto" Margin="0,0,0,50"/>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="50" 
+                           Height="*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ListView Grid.Column="0" 
+                  Grid.RowSpan="3"
+                  ItemsSource="{Binding allUsers.}"/>
+        <Label Grid.Column="1" 
+               Grid.ColumnSpan="2" 
+               Content="Create new user" 
+               FontSize="28" 
+               Width="Auto"/>
+        <StackPanel Grid.Column="1" 
+                    Grid.Row="1" 
+                    HorizontalAlignment="Center">
             <Label Content="Enter the name"/>
-            <TextBox Margin="10,0,10,0"/>
+            <TextBox/>
             <Label Content="Enter email"/>
-            <TextBox Margin="10,0,10,0"/>
+            <TextBox/>
             <Label Content="Enter phone number"/>
-            <TextBox Margin="10,0,10,0"/>
-            <Label Content="Choose the role"/>
-            <Menu>
-                <MenuItem Name="User"/>
-                <MenuItem/>
-            </Menu>
-            
+            <TextBox/>
         </StackPanel>
-        <Grid Grid.Column="2">
-            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+        <Grid Grid.Column="2" 
+              Grid.Row="1">
+            <StackPanel Grid.Column="2" 
+                        HorizontalAlignment="Center">
+                <Label Content="Choose the role"/>
+                <Menu>
+                    <MenuItem/>
+                    <MenuItem/>
+                </Menu>
                 <Label Content="Enter the username"/>
-                <TextBox Margin="10,0,10,0"/>
+                <TextBox/>
                 <Label Content="Enter the password"/>
-                <TextBox Margin="10,0,10,0"/>
+                <TextBox/>
             </StackPanel>
-                <Button Content="Save" VerticalAlignment="Bottom"/>
+        </Grid>
+        <Grid       Grid.Row="2"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2">
+            <Button Content="Save" 
+                    VerticalAlignment="Bottom" 
+                    HorizontalAlignment="Right"/>
+            <Button Content="Create new user"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Left"/>
         </Grid>
     </Grid>
 </UserControl>
