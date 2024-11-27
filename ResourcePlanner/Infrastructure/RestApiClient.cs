@@ -9,8 +9,9 @@ namespace ResourcePlanner.Infrastructure
     public class RestApiClient : IRestApiClient
     {
         private static RestApiClient? _instance;
-        private HttpClient _client;
+        private HttpClient? _client;
         private string _accessToken;
+        private bool _initialized = false;
 
         public static RestApiClient Instance
         {
@@ -21,28 +22,47 @@ namespace ResourcePlanner.Infrastructure
                 return _instance;
             }
         }
+
+        public HttpClient Client
+        {
+            get
+            {
+                if (!_initialized || _client == null)
+                    throw new InvalidOperationException("HttpClient is not initialized.");
+
+                return _client;
+            }
+        }
+
         private RestApiClient()
         {
-            _client = new HttpClient();
-            _accessToken = "";
+            this._accessToken = "";
         }
 
         public async Task<bool> ConnectAsync(string host, string port)
         {
             string baseUrl = $"http://{host}:{port}";
-            _client.BaseAddress = new Uri(baseUrl);
+            _client = new HttpClient { BaseAddress = new Uri(baseUrl) };
 
             var response = await _client.GetAsync("/Test");
             //return response.IsSuccessStatusCode
             if (response != null)
+            {
+                _initialized = true;
                 return true;
+            }
 
+            _client = null;
+            _initialized = false;
             return false;
         }
 
-        public Task<bool> DisconnectAsync()
+        public bool DisconnectAsync()
         {
-            throw new NotImplementedException();
+            _client?.Dispose();
+            _client = null;
+            _initialized = false;
+            return true;
         }
 
         public async Task<bool> LoginAsync(string username, string password)

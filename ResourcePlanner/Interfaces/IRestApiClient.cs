@@ -9,7 +9,7 @@ namespace ResourcePlanner.Interfaces
     public interface IRestApiClient
     {
         Task<bool> ConnectAsync(string host, string port);
-        Task<bool> DisconnectAsync();
+        bool DisconnectAsync();
         Task<bool> LoginAsync(string username, string password);
     }
 }
