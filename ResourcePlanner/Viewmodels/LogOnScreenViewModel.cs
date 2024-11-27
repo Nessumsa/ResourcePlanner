@@ -7,7 +7,7 @@ namespace ResourcePlanner.Viewmodels
 {
     internal class LogOnScreenViewModel : Bindable
     {
-        public event Action? UserLoggedIn;
+        public static event Action? UserLoggedIn;
         private LoginUser _loginUser;
         public ICommand LoginCMD { get; set; }
         public ICommand ForgotPasswordCMD { get; set; }
@@ -39,8 +39,8 @@ namespace ResourcePlanner.Viewmodels
             this._loginUser = new(RestApiClient.Instance);
             this.LoginCMD = new CommandRelay(Login, CanLogin);
             this.ForgotPasswordCMD = new CommandRelay(ResetPassword, CanResetPassword);
-            this._username = "";
-            this._password = "";
+            this._username = string.Empty;
+            this._password = string.Empty;
         }
 
         private async void Login() 
