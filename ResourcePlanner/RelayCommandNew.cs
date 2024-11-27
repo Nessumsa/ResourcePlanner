@@ -7,12 +7,12 @@ using System.Windows.Input;
 
 namespace ResourcePlanner
 {
-    public class RelayCommand : ICommand
+    public class RelayCommandNew : ICommand
     {
         private readonly Action<object> _execute;
         private readonly Func<object, bool> _canExecute;
 
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        public RelayCommandNew(Action<object> execute, Func<object, bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;

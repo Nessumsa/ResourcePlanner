@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using ResourcePlanner.DTOs;
+using ResourcePlanner.Interfaces;
 using System.Net.Http;
 using System.Text;
 
 namespace ResourcePlanner.Infrastructure
 {
-    public class RestApiClient
+    public class RestApiClient : IRestApiClient
     {
         private static RestApiClient? _instance;
         private HttpClient _client;
@@ -26,7 +27,7 @@ namespace ResourcePlanner.Infrastructure
             _accessToken = "";
         }
 
-        public async Task<bool> MakeConnectionAsync(string host, string port)
+        public async Task<bool> ConnectAsync(string host, string port)
         {
             string baseUrl = $"http://{host}:{port}";
             _client.BaseAddress = new Uri(baseUrl);
@@ -39,8 +40,15 @@ namespace ResourcePlanner.Infrastructure
             return false;
         }
 
-        public async Task<bool> LoginUser(LoginRequestDto request)
+        public Task<bool> DisconnectAsync()
         {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> LoginAsync(string username, string password)
+        {
+            LoginRequestDto request = new() { Username = username, Password = password };
+
             var jsonContent = new StringContent(
                 JsonConvert.SerializeObject(request),
                 Encoding.UTF8,
@@ -56,10 +64,12 @@ namespace ResourcePlanner.Infrastructure
                 if (loginResponse?.AccessToken != null)
                 {
                     _accessToken = loginResponse.AccessToken;
-                    Console.WriteLine(_accessToken);
+                    _client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _accessToken);
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
     }
 }

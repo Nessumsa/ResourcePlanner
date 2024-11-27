@@ -28,7 +28,7 @@ namespace ResourcePlanner.Viewmodels
 
         public MainViewModel()
         {
-            NavigateCommand = new RelayCommand(ExecuteNavigation);
+            NavigateCommand = new RelayCommandNew(ExecuteNavigation);
             CurrentView = new LogOnScreen(); // Default view
         }
 
