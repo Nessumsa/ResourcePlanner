@@ -4,11 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
+        xmlns:converters="clr-namespace:ResourcePlanner.Utilities.Converters"
         mc:Ignorable="d"
         Height="Auto" Width="Auto">
     <UserControl.DataContext>
         <local:InstitutionViewModel/>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:StringIntConverter x:Key="StringIntConverter" />
+    </UserControl.Resources>
     <Grid Background="LightBlue">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -21,17 +25,19 @@
                     FontSize="24"
                     Width="Auto"/>
             <Label Content="Start time"/>
-            <TextBox Text="{Binding institution.StartTime}"/>
+            <TextBox Text="{Binding StartTime}" />
             <Label Content="Slut time"/>
-            <TextBox Text="{Binding institution.EndTime}"/>
+            <TextBox Text="{Binding EndTime}" />
             <Label Content="Time interval"/>
-            <TextBox Text="{Binding institution.TimeInterval}"/>
+            <TextBox Text="{Binding Interval, 
+                     Converter={StaticResource StringIntConverter},
+                     Mode=TwoWay}" />
 
         </StackPanel>
         <Button     Grid.Row="1"
                     Content="Save" 
-                    Click="Save_Button_Click" 
                     HorizontalAlignment="Right" 
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom"
+                    Command="{Binding SaveCMD}"/>
     </Grid>
 </UserControl>

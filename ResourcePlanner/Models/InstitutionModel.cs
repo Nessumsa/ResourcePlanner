@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace ResourcePlanner.Models
 {
-    class Institution : INotifyPropertyChanged
+    class InstitutionModel : INotifyPropertyChanged
     {
         public String institutionID = "";
         public String startTime = "";
@@ -16,7 +16,7 @@ namespace ResourcePlanner.Models
         public String timeInterval = "";
 
 
-        public Institution(String ID, String startTime, String endTime, String timeInterval)
+        public InstitutionModel(String ID, String startTime, String endTime, String timeInterval)
         {
             this.institutionID = ID;
             this.startTime = startTime;

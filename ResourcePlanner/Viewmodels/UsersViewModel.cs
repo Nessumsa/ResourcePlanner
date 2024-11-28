@@ -73,7 +73,7 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
-        public string[] Roles { get; set; }
+        public string[] Roles { get; } = { "admin", "user" };
         private string _selectedRole;
 
         public string SelectedRole
@@ -115,7 +115,6 @@ namespace ResourcePlanner.Viewmodels
             this.SaveCMD = new CommandRelay(Create, CanCreate);
 
             this._userList = new ObservableCollection<User>();
-            this.Roles = new string[] { "admin", "user"};
 
             this._name = string.Empty;
             this._email = string.Empty;
@@ -205,7 +204,7 @@ namespace ResourcePlanner.Viewmodels
                 return;
 
             this.Userlist.Clear();
-            var users = await _userHandler.ReadAll(UserManager.Instance.InstitutionId);
+            var users = await _userHandler.GetAllUsers(UserManager.Instance.InstitutionId);
             if (users != null)
             {
                 foreach (var user in users)
