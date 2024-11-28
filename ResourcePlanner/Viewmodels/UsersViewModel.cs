@@ -73,13 +73,15 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
-        private string _role;
-        public string Role
+        public string[] Roles { get; set; }
+        private string _selectedRole;
+
+        public string SelectedRole
         {
-            get { return _role; }
+            get { return _selectedRole; }
             set
             {
-                _role = value;
+                _selectedRole = value;
                 OnPropertyChanged();
             }
         }
@@ -113,11 +115,12 @@ namespace ResourcePlanner.Viewmodels
             this.SaveCMD = new CommandRelay(Create, CanCreate);
 
             this._userList = new ObservableCollection<User>();
+            this.Roles = new string[] { "admin", "user"};
 
             this._name = string.Empty;
             this._email = string.Empty;
             this._phone = string.Empty;
-            this._role = string.Empty;
+            this._selectedRole = string.Empty;
             this._username = string.Empty;
             this._password = string.Empty;
 
@@ -131,12 +134,12 @@ namespace ResourcePlanner.Viewmodels
             SaveCMD = new CommandRelay(Create, CanCreate);
         }
 
-        private async void Create() 
+        private async void Create()
         {
             if (UserManager.Instance.InstitutionId == null || _userHandler == null)
-                return; 
+                return;
 
-            User user = new User(Name, Email, Phone, Role, Username, Password, UserManager.Instance.InstitutionId);
+            User user = new User(Name, Email, Phone, SelectedRole, Username, Password, UserManager.Instance.InstitutionId);
             bool userCreated = await _userHandler.CreateUser(user);
             if (userCreated)
             {
@@ -150,11 +153,11 @@ namespace ResourcePlanner.Viewmodels
             return !string.IsNullOrEmpty(Name) &&
                    !string.IsNullOrEmpty(Email) &&
                    !string.IsNullOrEmpty(Phone) &&
-                   !string.IsNullOrEmpty(Role) &&
+                   !string.IsNullOrEmpty(SelectedRole) &&
                    !string.IsNullOrEmpty(Username) &&
                    !string.IsNullOrEmpty(Password);
         }
-        
+
         private async void Update()
         {
             if (SelectedUser == null || _userHandler == null)
@@ -163,7 +166,7 @@ namespace ResourcePlanner.Viewmodels
             SelectedUser.Name = Name;
             SelectedUser.Email = Email;
             SelectedUser.Phone = Phone;
-            SelectedUser.Role = Role;
+            SelectedUser.Role = SelectedRole;
 
             if (!Username.Equals("*****"))
                 SelectedUser.Username = Username;
@@ -173,7 +176,7 @@ namespace ResourcePlanner.Viewmodels
             await _userHandler.UpdateUser(SelectedUser);
         }
 
-        private async void Delete() 
+        private async void Delete()
         {
             if (SelectedUser == null || SelectedUser.Id == null || _userHandler == null)
                 return;
@@ -186,11 +189,7 @@ namespace ResourcePlanner.Viewmodels
                 await PopulateUserList();
             }
         }
-        private bool IsUserSelected()
-        {
-            return SelectedUser != null;
-        }
-
+        private bool IsUserSelected() => SelectedUser != null;
 
         private async void InitView()
         {
@@ -214,7 +213,7 @@ namespace ResourcePlanner.Viewmodels
             }
 
         }
-        private void PopulateUserProfile() 
+        private void PopulateUserProfile()
         {
             if (SelectedUser == null)
                 return;
@@ -222,19 +221,14 @@ namespace ResourcePlanner.Viewmodels
             Name = SelectedUser.Name ?? string.Empty;
             Email = SelectedUser.Email ?? string.Empty;
             Phone = SelectedUser.Phone ?? string.Empty;
-            Role = SelectedUser.Role ?? string.Empty;
+            SelectedRole = SelectedUser.Role ?? string.Empty;
             Username = "*****";
             Password = "*****";
         }
 
         private void ResetFields()
         {
-            Name = string.Empty;
-            Email = string.Empty;
-            Phone = string.Empty;
-            Role = string.Empty;
-            Username = string.Empty;
-            Password = string.Empty;
+            Name = Email = Phone = SelectedRole = Username = Password = string.Empty;
         }
     }
 }

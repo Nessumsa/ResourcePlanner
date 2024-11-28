@@ -23,8 +23,16 @@
         </Grid.RowDefinitions>
         <ListView Grid.Column="0" 
                   Grid.RowSpan="3"
-                  ItemsSource="{Binding Userlist}" SelectionChanged="ListView_SelectionChanged"/>
-        <Label Grid.Column="1" 
+                  ItemsSource="{Binding Userlist}" 
+                  SelectedItem="{Binding SelectedUser, Mode=TwoWay}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Users"
+                                    DisplayMemberBinding="{Binding Name}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+            <Label Grid.Column="1" 
                Grid.ColumnSpan="2" 
                Content="Create new user" 
                FontSize="28" 
@@ -44,10 +52,8 @@
             <StackPanel Grid.Column="2" 
                         HorizontalAlignment="Center">
                 <Label Content="Choose the role"/>
-                <Menu>
-                    <MenuItem/>
-                    <MenuItem/>
-                </Menu>
+                <ComboBox ItemsSource="{Binding Roles}"
+                          SelectedItem="{Binding SelectedRole, Mode=TwoWay}"/>
                 <Label Content="Enter the username"/>
                 <TextBox Text="{Binding Username}"/>
                 <Label Content="Enter the password"/>
