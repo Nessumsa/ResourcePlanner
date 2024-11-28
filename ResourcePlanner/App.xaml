@@ -23,6 +23,7 @@
             <Setter Property="FontFamily" Value="Arial"/>
             <Setter Property="Margin" Value="10,0,10,0"/>
             <Setter Property="MaxWidth" Value="200"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
         <Style TargetType="Button">
             <Setter Property="HorizontalAlignment" Value="Center"/>

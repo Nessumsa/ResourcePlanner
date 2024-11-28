@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace ResourcePlanner.Models
 {
-    class Resources : INotifyPropertyChanged
+    class ResourcesModel : INotifyPropertyChanged
     {
         public String resourceID = "";
         public String name = "";
         public String description = "";
         public String institutionID = "";
 
-        public Resources()
+        public ResourcesModel()
         {
 
 

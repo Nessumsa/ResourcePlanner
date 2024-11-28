@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ResourcePlanner.Models
 {
-    class Users : INotifyPropertyChanged
+    class UsersModel : INotifyPropertyChanged
     {
         public String? userID;
         public String? name;
@@ -19,7 +19,7 @@ namespace ResourcePlanner.Models
         public String? password;
         public String institutionID = "";
         // This should maybe not be a string. Needs implementation. public String allowedResources;
-        public ObservableCollection<Users>? allUsers;
+        public ObservableCollection<UsersModel>? allUsers;
 
         public String Name
         {
@@ -34,7 +34,7 @@ namespace ResourcePlanner.Models
             }
         }
 
-        public Users(string name)
+        public UsersModel(string name)
         {
             this.name = name;
         }

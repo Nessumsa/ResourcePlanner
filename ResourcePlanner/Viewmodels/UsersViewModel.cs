@@ -10,20 +10,20 @@ namespace ResourcePlanner.Viewmodels
 {
     class UsersViewModel
     {
-        public ObservableCollection<Users> allUsers { get; set; }
+        public ObservableCollection<UsersModel> allUsers { get; set; }
 
         public UsersViewModel()
         {
-            allUsers = new ObservableCollection<Users>
+            allUsers = new ObservableCollection<UsersModel>
             {
-                new Users("Ole"),
-                new Users("Ole2"),
-                new Users("Ole3"),
-                new Users("Ole4"),
-                new Users("Ole5"),
-                new Users("Ole6"),
-                new Users("Ole7"),
-                new Users("Ole8"),
+                new UsersModel("Ole"),
+                new UsersModel("Ole2"),
+                new UsersModel("Ole3"),
+                new UsersModel("Ole4"),
+                new UsersModel("Ole5"),
+                new UsersModel("Ole6"),
+                new UsersModel("Ole7"),
+                new UsersModel("Ole8"),
             };
         }
     }

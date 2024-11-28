@@ -4,11 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
+        xmlns:converter="clr-namespace:ResourcePlanner.Utilities"
         mc:Ignorable="d"
         Height="Auto" Width="Auto">
     <UserControl.DataContext>
         <local:InstitutionViewModel/>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <converter:TimeConverter x:Key="Converter"/>
+    </UserControl.Resources>
     <Grid Background="LightBlue">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -21,16 +25,16 @@
                     FontSize="24"
                     Width="Auto"/>
             <Label Content="Start time"/>
-            <TextBox Text="{Binding institution.StartTime}"/>
+            <TextBox Text="{Binding institution.StartTime, Converter={StaticResource Converter}}" MaxLength="5"/>
             <Label Content="Slut time"/>
-            <TextBox Text="{Binding institution.EndTime}"/>
+            <TextBox Text="{Binding institution.EndTime, Converter={StaticResource Converter}}" MaxLength="5"/>
             <Label Content="Time interval"/>
-            <TextBox Text="{Binding institution.TimeInterval}"/>
+            <TextBox Text="{Binding institution.TimeInterval}" MaxLength="20"/>
 
         </StackPanel>
         <Button     Grid.Row="1"
                     Content="Save" 
-                    Click="Save_Button_Click" 
+                    Command="{Binding saveButton}" 
                     HorizontalAlignment="Right" 
                     VerticalAlignment="Bottom"/>
     </Grid>

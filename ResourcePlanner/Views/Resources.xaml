@@ -50,7 +50,8 @@
                     Grid.ColumnSpan="2">
             <Button Content="Save"  
                     VerticalAlignment="Bottom" 
-                    HorizontalAlignment="Right"/>
+                    HorizontalAlignment="Right"
+                    Command="{Binding saveButton}"/>
             <Button Content="Setup new resource"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Left"/>
