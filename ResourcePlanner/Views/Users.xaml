@@ -23,8 +23,16 @@
         </Grid.RowDefinitions>
         <ListView Grid.Column="0" 
                   Grid.RowSpan="3"
-                  ItemsSource="{Binding allUsers.}"/>
-        <Label Grid.Column="1" 
+                  ItemsSource="{Binding Userlist}" 
+                  SelectedItem="{Binding SelectedUser, Mode=TwoWay}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Users"
+                                    DisplayMemberBinding="{Binding Name}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+            <Label Grid.Column="1" 
                Grid.ColumnSpan="2" 
                Content="Create new user" 
                FontSize="28" 
@@ -33,25 +41,23 @@
                     Grid.Row="1" 
                     HorizontalAlignment="Center">
             <Label Content="Enter the name"/>
-            <TextBox/>
+            <TextBox Text="{Binding Name}"/>
             <Label Content="Enter email"/>
-            <TextBox/>
+            <TextBox Text="{Binding Email}"/>
             <Label Content="Enter phone number"/>
-            <TextBox/>
+            <TextBox Text="{Binding Phone}"/>
         </StackPanel>
         <Grid Grid.Column="2" 
               Grid.Row="1">
             <StackPanel Grid.Column="2" 
                         HorizontalAlignment="Center">
                 <Label Content="Choose the role"/>
-                <Menu>
-                    <MenuItem/>
-                    <MenuItem/>
-                </Menu>
+                <ComboBox ItemsSource="{Binding Roles}"
+                          SelectedItem="{Binding SelectedRole, Mode=TwoWay}"/>
                 <Label Content="Enter the username"/>
-                <TextBox/>
+                <TextBox Text="{Binding Username}"/>
                 <Label Content="Enter the password"/>
-                <TextBox/>
+                <TextBox Text="{Binding Password}"/>
             </StackPanel>
         </Grid>
         <Grid       Grid.Row="2"
@@ -59,10 +65,16 @@
                     Grid.ColumnSpan="2">
             <Button Content="Save" 
                     VerticalAlignment="Bottom" 
-                    HorizontalAlignment="Right"/>
-            <Button Content="Create new user"
+                    HorizontalAlignment="Right"
+                    Command="{Binding SaveCMD}"/>
+            <Button Content="Delete" 
+                    VerticalAlignment="Bottom" 
+                    HorizontalAlignment="Left"
+                    Command="{Binding DeleteCMD}"/>
+            <Button Content="New"
                     VerticalAlignment="Bottom"
-                    HorizontalAlignment="Left"/>
+                    HorizontalAlignment="Center"
+                    Command="{Binding MakeNewCMD}"/>
         </Grid>
     </Grid>
 </UserControl>

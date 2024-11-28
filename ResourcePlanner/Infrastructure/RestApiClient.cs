@@ -86,6 +86,8 @@ namespace ResourcePlanner.Infrastructure
                     _accessToken = loginResponse.AccessToken;
                     _client.DefaultRequestHeaders.Authorization =
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _accessToken);
+
+                    UserManager.Instance.Initialize(loginResponse.UserId, loginResponse.InstitutionId);
                     return true;
                 }
             }
