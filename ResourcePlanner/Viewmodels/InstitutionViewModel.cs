@@ -1,11 +1,9 @@
-﻿using ResourcePlanner.Models;
+﻿using ResourcePlanner.Domain;
+using ResourcePlanner.Infrastructure;
+using ResourcePlanner.Infrastructure.Adapters;
+using ResourcePlanner.UseCases;
 using ResourcePlanner.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using ResourcePlanner.Utilities.Regexes;
 using System.Windows.Input;
 
 namespace ResourcePlanner.Viewmodels

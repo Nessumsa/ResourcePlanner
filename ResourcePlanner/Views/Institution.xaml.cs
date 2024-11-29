@@ -1,11 +1,4 @@
-﻿using ResourcePlanner.Utilities.Regexes;
-using ResourcePlanner.Viewmodels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using ResourcePlanner.Viewmodels;
 using System.Windows.Controls;
 
 namespace ResourcePlanner.Views
