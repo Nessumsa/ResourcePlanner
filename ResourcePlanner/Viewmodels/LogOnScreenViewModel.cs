@@ -1,11 +1,12 @@
 ﻿using ResourcePlanner.Infrastructure;
 using ResourcePlanner.UseCases;
 using ResourcePlanner.Utilities;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace ResourcePlanner.Viewmodels
 {
-    internal class LogOnScreenViewModel : Bindable
+    public class LogOnScreenViewModel : Bindable
     {
         public static event Action? UserLoggedIn;
         private LoginUser _loginUser;
@@ -48,6 +49,7 @@ namespace ResourcePlanner.Viewmodels
             bool authenticated = await _loginUser.Execute("localhost", "5000", Username, Password);
             if (authenticated)
                 UserLoggedIn?.Invoke();
+                
         }
         private bool CanLogin() 
         {

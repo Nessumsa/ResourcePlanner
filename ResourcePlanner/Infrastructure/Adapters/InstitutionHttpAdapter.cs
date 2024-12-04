@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ResourcePlanner.Infrastructure.Adapters
 {
-    internal class InstitutionHttpAdapter : IInstitutionAdapter<Institution, string>
+    public class InstitutionHttpAdapter : IInstitutionAdapter<Institution, string>
     {
         private readonly HttpClient _client;
         public InstitutionHttpAdapter(HttpClient client)

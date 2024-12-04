@@ -28,7 +28,7 @@ namespace ResourcePlanner.Infrastructure.Adapters
 
         public async Task<IEnumerable<User>?> ReadAllAsync(string institutionId)
         {
-            var response = await _client.GetAsync($"/api/users?institutionId={institutionId}");
+            var response = await _client.GetAsync($"/api/users/all?institutionId={institutionId}");
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
