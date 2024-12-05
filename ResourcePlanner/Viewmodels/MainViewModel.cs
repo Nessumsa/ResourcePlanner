@@ -1,11 +1,12 @@
-﻿using ResourcePlanner.Views;
+﻿using ResourcePlanner.Utilities;
+using ResourcePlanner.Views;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ResourcePlanner.Viewmodels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : Bindable
     {
         private UserControl _currentView;
 
@@ -15,16 +16,16 @@ namespace ResourcePlanner.Viewmodels
             set
             {
                 _currentView = value;
-                OnPropertyChanged(nameof(CurrentView));
+                OnPropertyChanged();
             }
         }
 
-        public LogOnScreen LogOnScreenControl { get; }
-        public Homescreen HomescreenControl { get; }
-        public Statistics StatisticsControl { get; }
-        public Resources ResourcesControl { get; }
-        public Users UsersControl { get; }
-        public Institution InstitutionControl { get; }
+        public UserControl LogOnScreenControl { get; }
+        public UserControl HomescreenControl { get; }
+        public UserControl StatisticsControl { get; }
+        public UserControl ResourcesControl { get; }
+        public UserControl UsersControl { get; }
+        public UserControl InstitutionControl { get; }
 
         public ICommand NavigateCommand { get; }
 
@@ -73,16 +74,14 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
+        private bool CanNavigatge()
+        {
+            return true; 
+        }
+
         private void OnUserLoggedIn()
         {
             CurrentView = HomescreenControl; 
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

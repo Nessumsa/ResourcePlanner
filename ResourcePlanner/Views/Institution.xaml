@@ -35,11 +35,11 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="Choose image" Width="85" Command="{Binding ChooseCMD}"/>
+                    <Button Content="New image" Width="85" Command="{Binding ChooseCMD}"/>
                     <Button Content="Upload image" Width="85" Command="{Binding UploadCMD}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="1">
-                    <TextBox Text="{Binding SelectedImagePath, Mode=OneWay}" IsReadOnly="True"/>
+                    <Label Content="{Binding SelectedImagePath}" FontSize="8"/>
                 </StackPanel>
             </Grid>
             

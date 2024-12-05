@@ -66,9 +66,9 @@ namespace ResourcePlanner.Viewmodels
 
         public InstitutionViewModel()
         {
-            this.ChooseCMD = new CommandRelay(ChooseImage, CanChooseImage);
-            this.UploadCMD = new CommandRelay(UploadImage, CanUploadImage);
-            this.SaveCMD = new CommandRelay(Update, CanUpdate);
+            this.ChooseCMD = new RelayCommand(ChooseImage, CanChooseImage);
+            this.UploadCMD = new RelayCommand(UploadImage, CanUploadImage);
+            this.SaveCMD = new RelayCommand(Update, CanUpdate);
 
             this._startTime = string.Empty;
             this._endTime = string.Empty;
@@ -127,24 +127,26 @@ namespace ResourcePlanner.Viewmodels
 
         private async void UploadImage() 
         {
-            if (_imageHandler == null || _instituttion == null)
+            if (_imageHandler == null || _institutionHandler == null || _instituttion == null)
                 return;
 
-            if (!string.IsNullOrEmpty(_instituttion.InstitutionImage))
-                await _imageHandler.DeleteImage(_instituttion.InstitutionImage);
+            if (!string.IsNullOrEmpty(_instituttion.imageUrl))
+                await _imageHandler.DeleteImage(_instituttion.imageUrl);
 
             var url = await _imageHandler.UploadImage(SelectedImagePath);
             if (url != null)
             {
-                _instituttion.InstitutionImage = url;
+                _instituttion.imageUrl = url;
                 SelectedImagePath = string.Empty;
-                Debug.WriteLine(_instituttion.InstitutionImage);
+
+                await _institutionHandler.UpdateInstitution(_instituttion);
             }
         }
         private bool CanUploadImage()
         {
             return !string.IsNullOrEmpty(SelectedImagePath) &&
-                   _imageHandler != null;
+                   _imageHandler != null &&
+                   _institutionHandler != null;
         }
 
         private async void InitView()

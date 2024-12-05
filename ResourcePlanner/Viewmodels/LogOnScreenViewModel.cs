@@ -38,8 +38,8 @@ namespace ResourcePlanner.Viewmodels
         public LogOnScreenViewModel() 
         {
             this._loginUser = new(RestApiClient.Instance);
-            this.LoginCMD = new CommandRelay(Login, CanLogin);
-            this.ForgotPasswordCMD = new CommandRelay(ResetPassword, CanResetPassword);
+            this.LoginCMD = new RelayCommand(Login, CanLogin);
+            this.ForgotPasswordCMD = new RelayCommand(ResetPassword, CanResetPassword);
             this._username = string.Empty;
             this._password = string.Empty;
         }

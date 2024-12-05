@@ -31,7 +31,7 @@ namespace ResourcePlanner.Infrastructure.Adapters
         }
         public async Task<bool> DeleteAsync(string filepath)
         {
-            var response = await _httpClient.DeleteAsync($"/api/images/delete?url={filepath}");
+            var response = await _httpClient.DeleteAsync($"/api/images?filePath={filepath}");
             if (response.IsSuccessStatusCode)
                 return true;
 

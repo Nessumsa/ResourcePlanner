@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace ResourcePlanner.Utilities
 {
-    public class Bindable
+    public class Bindable : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = "")

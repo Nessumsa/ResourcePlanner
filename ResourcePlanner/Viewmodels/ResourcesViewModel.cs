@@ -17,7 +17,7 @@ namespace ResourcePlanner.Viewmodels
 
         public ResourcesViewModel()
         {
-            saveButton = new CommandRelay(Save_Button_Click, CanButtonClick);
+            saveButton = new RelayCommand(Save_Button_Click, CanButtonClick);
         }
 
         private void Save_Button_Click()
