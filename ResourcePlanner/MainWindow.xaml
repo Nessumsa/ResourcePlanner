@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="Auto" Width="Auto"
-        MaxWidth="1100" MaxHeight="600"
-        MinWidth="700" MinHeight="300">
+        Title="MainWindow" Height="Auto" Width="750"
+        MaxWidth="750" MaxHeight="600"
+        MinWidth="750" MinHeight="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

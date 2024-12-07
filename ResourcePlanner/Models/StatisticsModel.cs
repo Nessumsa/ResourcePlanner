@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResourcePlanner.Models
 {
-    class Statistics
+    class StatisticsModel
     {
     }
 }

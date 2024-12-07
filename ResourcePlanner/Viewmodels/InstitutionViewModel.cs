@@ -12,11 +12,11 @@ namespace ResourcePlanner.Viewmodels
 {
     internal class InstitutionViewModel
     {
-        public Institution institution { get; set; }
+        public InstitutionModel institution { get; set; }
         public ICommand saveButton { get; }
         public InstitutionViewModel()
         {
-            institution = new Institution("1","1000","1200","30"); //Implement load institution from database
+            institution = new InstitutionModel("1","1000","1200","30"); //Implement load institution from database
             saveButton = new CommandRelay(Save_Button_Click, CanButtonClick);
         }
 

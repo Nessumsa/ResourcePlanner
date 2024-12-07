@@ -1,4 +1,5 @@
 ﻿using ResourcePlanner.Views;
+using ResourcePlanner.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ResourcePlanner.Models;
 
 namespace ResourcePlanner.Viewmodels
 {

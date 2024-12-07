@@ -51,7 +51,7 @@
             <Button Content="Save"  
                     VerticalAlignment="Bottom" 
                     HorizontalAlignment="Right"
-                    Command="{Binding saveButton}"/>
+                    Command="{Binding SaveCMD}"/>
             <Button Content="Setup new resource"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Left"/>
