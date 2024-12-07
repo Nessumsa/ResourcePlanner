@@ -11,12 +11,12 @@ namespace ResourcePlanner.UseCases
             this._userAdapter = userAdapter;
         }
 
-        public async Task<User?> ReadUser(string userId)
+        public async Task<User?> GetUser(string userId)
         {
             return await _userAdapter.ReadAsync(userId);
         }
 
-        public async Task<IEnumerable<User>?> ReadAll(string insitutionId)
+        public async Task<IEnumerable<User>?> GetAllUsers(string insitutionId)
         {
             return await _userAdapter.ReadAllAsync(insitutionId);
         }

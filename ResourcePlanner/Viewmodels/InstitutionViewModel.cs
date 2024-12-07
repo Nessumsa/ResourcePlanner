@@ -1,29 +1,176 @@
-﻿using ResourcePlanner.Models;
+﻿using ResourcePlanner.Domain;
+using ResourcePlanner.Infrastructure;
+using ResourcePlanner.Infrastructure.Adapters;
+using ResourcePlanner.UseCases;
 using ResourcePlanner.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using ResourcePlanner.Utilities.Regexes;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace ResourcePlanner.Viewmodels
 {
-    internal class InstitutionViewModel
+    public class InstitutionViewModel : Bindable
     {
-        public InstitutionModel institution { get; set; }
-        public ICommand saveButton { get; }
-        public InstitutionViewModel()
+        private InstitutionHandler? _institutionHandler;
+        private ImageHandler? _imageHandler;
+        private Institution? _instituttion;
+        public ICommand ChooseCMD { get; }
+        public ICommand UploadCMD { get; }
+        public ICommand SaveCMD { get; }
+
+        private string _startTime;
+        public string StartTime
         {
-            institution = new InstitutionModel("1","1000","1200","30"); //Implement load institution from database
-            saveButton = new CommandRelay(Save_Button_Click, CanButtonClick);
+            get { return _startTime; }
+            set
+            {
+                _startTime = value;
+                OnPropertyChanged();
+            }
         }
 
-        private void Save_Button_Click()
+        private string _endTime;
+        public string EndTime
         {
-            System.Diagnostics.Debug.WriteLine(institution.startTime); //Implement update institution function
+            get { return _endTime; }
+            set
+            {
+                _endTime = value;
+                OnPropertyChanged();
+            }
         }
-        private bool CanButtonClick() => institution != null ? true : false;
+
+        private int _interval;
+        public int Interval
+        {
+            get { return _interval; }
+            set
+            {
+                _interval = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _selectedImagePath;
+
+        public string SelectedImagePath
+        {
+            get { return _selectedImagePath; }
+            set
+            {
+                _selectedImagePath = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public InstitutionViewModel()
+        {
+            this.ChooseCMD = new RelayCommand(ChooseImage, CanChooseImage);
+            this.UploadCMD = new RelayCommand(UploadImage, CanUploadImage);
+            this.SaveCMD = new RelayCommand(Update, CanUpdate);
+
+            this._startTime = string.Empty;
+            this._endTime = string.Empty;
+            this._interval = 0;
+            this._selectedImagePath = string.Empty;
+
+            LogOnScreenViewModel.UserLoggedIn += InitView;
+        }
+
+        private async void Update()
+        {
+            if (_institutionHandler == null || _instituttion == null)
+                return;
+
+            _instituttion.OpenTime = StartTime;
+            _instituttion.CloseTime = EndTime;
+            _instituttion.BookingInterval = Interval;
+
+            await _institutionHandler.UpdateInstitution(_instituttion);
+        }
+        private bool CanUpdate()
+        {
+            if (_institutionHandler == null)
+                return false;
+
+            if (string.IsNullOrEmpty(StartTime) || !TimeValidator.IsValid(StartTime) ||
+                string.IsNullOrEmpty(EndTime) || !TimeValidator.IsValid(EndTime))
+                return false;
+
+            DateTime startDateTime = DateTime.ParseExact(StartTime, "HH:mm", null);
+            DateTime endDateTime = DateTime.ParseExact(EndTime, "HH:mm", null);
+            if (startDateTime >= endDateTime)
+                return false;
+
+            return Interval >= 5 && Interval <= 60;
+        }
+
+        private void ChooseImage()
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp"
+            };
+
+            var result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                SelectedImagePath = openFileDialog.FileName;
+            }
+        }
+
+        private bool CanChooseImage()
+        {
+            return _imageHandler != null;
+        }
+
+        private async void UploadImage() 
+        {
+            if (_imageHandler == null || _institutionHandler == null || _instituttion == null)
+                return;
+
+            if (!string.IsNullOrEmpty(_instituttion.imageUrl))
+                await _imageHandler.DeleteImage(_instituttion.imageUrl);
+
+            var url = await _imageHandler.UploadImage(SelectedImagePath);
+            if (url != null)
+            {
+                _instituttion.imageUrl = url;
+                SelectedImagePath = string.Empty;
+
+                await _institutionHandler.UpdateInstitution(_instituttion);
+            }
+        }
+        private bool CanUploadImage()
+        {
+            return !string.IsNullOrEmpty(SelectedImagePath) &&
+                   _imageHandler != null &&
+                   _institutionHandler != null;
+        }
+
+        private async void InitView()
+        {
+            Debug.WriteLine("Calling init inst view");
+            InstitutionHttpAdapter institutionHttpAdapter = new InstitutionHttpAdapter(RestApiClient.Instance.Client);
+            ImageHttpAdapter imageHttpAdapter = new ImageHttpAdapter(RestApiClient.Instance.Client);
+            this._institutionHandler = new InstitutionHandler(institutionHttpAdapter);
+            this._imageHandler = new ImageHandler(imageHttpAdapter);
+
+            await PopulateFields();
+        }
+        private async Task PopulateFields()
+        {
+            if (UserManager.Instance.InstitutionId == null || _institutionHandler == null)
+                return;
+
+            _instituttion = await _institutionHandler.GetInstitution(UserManager.Instance.InstitutionId);
+            if (_instituttion != null)
+            {
+                StartTime = _instituttion.OpenTime ?? string.Empty;
+                EndTime = _instituttion.CloseTime ?? string.Empty;
+                Interval = _instituttion.BookingInterval;
+            }
+        }
     }
 }

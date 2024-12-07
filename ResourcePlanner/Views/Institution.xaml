@@ -4,14 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
-        xmlns:converter="clr-namespace:ResourcePlanner.Utilities"
+        xmlns:converters="clr-namespace:ResourcePlanner.Utilities.Converters"
         mc:Ignorable="d"
         Height="Auto" Width="Auto">
-    <UserControl.DataContext>
-        <local:InstitutionViewModel/>
-    </UserControl.DataContext>
     <UserControl.Resources>
-        <converter:TimeConverter x:Key="Converter"/>
+        <converters:StringIntConverter x:Key="StringIntConverter" />
     </UserControl.Resources>
     <Grid Background="LightBlue">
         <Grid.RowDefinitions>
@@ -24,18 +21,34 @@
                     HorizontalAlignment="Center"  
                     FontSize="24"
                     Width="Auto"/>
-            <Label Content="Start time"/>
-            <TextBox Text="{Binding institution.StartTime, Converter={StaticResource Converter}}" MaxLength="5"/>
-            <Label Content="Slut time"/>
-            <TextBox Text="{Binding institution.EndTime, Converter={StaticResource Converter}}" MaxLength="5"/>
-            <Label Content="Time interval"/>
-            <TextBox Text="{Binding institution.TimeInterval}" MaxLength="20"/>
+            <Label Content="Open hours (hh:mm)"/>
+            <TextBox Text="{Binding StartTime}" />
+            <Label Content="Close hours (hh:mm)"/>
+            <TextBox Text="{Binding EndTime}" />
+            <Label Content="Book interval (min)"/>
+            <TextBox Text="{Binding Interval, 
+                     Converter={StaticResource StringIntConverter},
+                     Mode=TwoWay}" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="New image" Width="85" Command="{Binding ChooseCMD}"/>
+                    <Button Content="Upload image" Width="85" Command="{Binding UploadCMD}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <Label Content="{Binding SelectedImagePath}" FontSize="8"/>
+                </StackPanel>
+            </Grid>
+            
 
         </StackPanel>
         <Button     Grid.Row="1"
                     Content="Save" 
-                    Command="{Binding saveButton}" 
                     HorizontalAlignment="Right" 
-                    VerticalAlignment="Bottom"/>
+                    VerticalAlignment="Bottom"
+                    Command="{Binding SaveCMD}"/>
     </Grid>
 </UserControl>

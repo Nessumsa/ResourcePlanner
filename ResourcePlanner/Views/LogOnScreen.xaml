@@ -6,9 +6,6 @@
         xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
         mc:Ignorable="d"
         Height="Auto" Width="Auto">
-    <UserControl.DataContext>
-        <local:LogOnScreenViewModel/>
-    </UserControl.DataContext>
     <StackPanel Background="LightBlue">
         <Label Content="Program name" FontSize="48"/>
         <Label Content="Login" Margin="0,30,0,0"/>

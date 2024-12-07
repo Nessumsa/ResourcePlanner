@@ -81,7 +81,7 @@ namespace ResourcePlanner.Infrastructure
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var loginResponse = JsonConvert.DeserializeObject<LoginResponseDto>(responseContent);
 
-                if (loginResponse?.AccessToken != null)
+                if (loginResponse.UserRole.Equals("admin") && loginResponse?.AccessToken != null)
                 {
                     _accessToken = loginResponse.AccessToken;
                     _client.DefaultRequestHeaders.Authorization =

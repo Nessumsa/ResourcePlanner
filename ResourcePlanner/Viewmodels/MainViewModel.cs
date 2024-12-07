@@ -1,18 +1,12 @@
-﻿using ResourcePlanner.Views;
-using ResourcePlanner.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using ResourcePlanner.Utilities;
+using ResourcePlanner.Views;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ResourcePlanner.Models;
 
 namespace ResourcePlanner.Viewmodels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : Bindable
     {
         private UserControl _currentView;
 
@@ -22,16 +16,33 @@ namespace ResourcePlanner.Viewmodels
             set
             {
                 _currentView = value;
-                OnPropertyChanged(nameof(CurrentView));
+                OnPropertyChanged();
             }
         }
+
+        public UserControl LogOnScreenControl { get; }
+        public UserControl HomescreenControl { get; }
+        public UserControl StatisticsControl { get; }
+        public UserControl ResourcesControl { get; }
+        public UserControl UsersControl { get; }
+        public UserControl InstitutionControl { get; }
 
         public ICommand NavigateCommand { get; }
 
         public MainViewModel()
         {
+            LogOnScreenControl = new LogOnScreen();
+            HomescreenControl = new Homescreen();
+            StatisticsControl = new Statistics();
+            ResourcesControl = new Resources();
+            UsersControl = new Users();
+            InstitutionControl = new Institution();
+
+            CurrentView = LogOnScreenControl;
+
             NavigateCommand = new RelayCommandNew(ExecuteNavigation);
-            CurrentView = new LogOnScreen(); // Default view
+
+            LogOnScreenViewModel.UserLoggedIn += OnUserLoggedIn;
         }
 
         private void ExecuteNavigation(object parameter)
@@ -41,33 +52,36 @@ namespace ResourcePlanner.Viewmodels
             switch (destination)
             {
                 case "Homescreen":
-                    CurrentView = new Homescreen();
+                    CurrentView = HomescreenControl;
                     break;
                 case "Statistics":
-                    CurrentView = new Statistics();
+                    CurrentView = StatisticsControl;
                     break;
                 case "Resources":
-                    CurrentView = new Resources();
+                    CurrentView = ResourcesControl;
                     break;
                 case "Users":
-                    CurrentView = new Users();
+                    CurrentView = UsersControl;
                     break;
                 case "Institution":
-                    CurrentView = new Institution();
+                    CurrentView = InstitutionControl;
                     break;
                 case "LogOnScreen":
-                    CurrentView = new LogOnScreen();
+                    CurrentView = LogOnScreenControl;
                     break;
                 default:
                     throw new ArgumentException("Unknown view: " + destination);
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
+        private bool CanNavigatge()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true; 
+        }
+
+        private void OnUserLoggedIn()
+        {
+            CurrentView = HomescreenControl; 
         }
     }
 }

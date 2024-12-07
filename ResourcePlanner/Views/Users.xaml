@@ -6,9 +6,6 @@
         xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
         mc:Ignorable="d"
         Height="Auto" Width="Auto">
-    <UserControl.DataContext>
-        <local:UsersViewModel/>
-    </UserControl.DataContext>
     <Grid Background="LightBlue">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

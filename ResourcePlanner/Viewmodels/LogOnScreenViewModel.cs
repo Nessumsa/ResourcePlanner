@@ -1,11 +1,12 @@
 ﻿using ResourcePlanner.Infrastructure;
 using ResourcePlanner.UseCases;
 using ResourcePlanner.Utilities;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace ResourcePlanner.Viewmodels
 {
-    internal class LogOnScreenViewModel : Bindable
+    public class LogOnScreenViewModel : Bindable
     {
         public static event Action? UserLoggedIn;
         private LoginUser _loginUser;
@@ -37,8 +38,8 @@ namespace ResourcePlanner.Viewmodels
         public LogOnScreenViewModel() 
         {
             this._loginUser = new(RestApiClient.Instance);
-            this.LoginCMD = new CommandRelay(Login, CanLogin);
-            this.ForgotPasswordCMD = new CommandRelay(ResetPassword, CanResetPassword);
+            this.LoginCMD = new RelayCommand(Login, CanLogin);
+            this.ForgotPasswordCMD = new RelayCommand(ResetPassword, CanResetPassword);
             this._username = string.Empty;
             this._password = string.Empty;
         }
@@ -48,6 +49,7 @@ namespace ResourcePlanner.Viewmodels
             bool authenticated = await _loginUser.Execute("localhost", "5000", Username, Password);
             if (authenticated)
                 UserLoggedIn?.Invoke();
+                
         }
         private bool CanLogin() 
         {

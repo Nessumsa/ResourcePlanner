@@ -14,7 +14,7 @@ namespace ResourcePlanner.Viewmodels
 
         public ICommand MakeNewCMD { get; }
         public ICommand DeleteCMD { get; }
-        public ICommand SaveCMD { get; private set; }
+        public RelayCommand SaveCMD { get; private set; }
 
         private ObservableCollection<User> _userList;
         public ObservableCollection<User> Userlist
@@ -36,7 +36,7 @@ namespace ResourcePlanner.Viewmodels
                 _selectedUser = value;
                 OnPropertyChanged();
                 PopulateUserProfile();
-                SaveCMD = new CommandRelay(Update, IsUserSelected);
+                SaveCMD.UpdateCommand(Update, IsUserSelected);
             }
         }
 
@@ -73,7 +73,7 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
-        public string[] Roles { get; set; }
+        public string[] Roles { get; } = { "admin", "user" };
         private string _selectedRole;
 
         public string SelectedRole
@@ -110,12 +110,11 @@ namespace ResourcePlanner.Viewmodels
 
         public UsersViewModel()
         {
-            this.MakeNewCMD = new CommandRelay(ResetForm, IsUserSelected);
-            this.DeleteCMD = new CommandRelay(Delete, IsUserSelected);
-            this.SaveCMD = new CommandRelay(Create, CanCreate);
+            this.MakeNewCMD = new RelayCommand(ResetForm, IsUserSelected);
+            this.DeleteCMD = new RelayCommand(Delete, IsUserSelected);
+            this.SaveCMD = new RelayCommand(Create, CanCreate);
 
             this._userList = new ObservableCollection<User>();
-            this.Roles = new string[] { "admin", "user"};
 
             this._name = string.Empty;
             this._email = string.Empty;
@@ -131,7 +130,7 @@ namespace ResourcePlanner.Viewmodels
         {
             ResetFields();
             SelectedUser = null;
-            SaveCMD = new CommandRelay(Create, CanCreate);
+            SaveCMD.UpdateCommand(Create, CanCreate);
         }
 
         private async void Create()
@@ -173,7 +172,13 @@ namespace ResourcePlanner.Viewmodels
             if (!Password.Equals("*****"))
                 SelectedUser.Password = Password;
 
-            await _userHandler.UpdateUser(SelectedUser);
+            bool userUpdated = await _userHandler.UpdateUser(SelectedUser);
+            if (userUpdated)
+            {
+                ResetForm();
+                await PopulateUserList();
+            }
+                
         }
 
         private async void Delete()
@@ -184,8 +189,7 @@ namespace ResourcePlanner.Viewmodels
             bool userDeleted = await _userHandler.DeleteUser(SelectedUser.Id);
             if (userDeleted)
             {
-                ResetFields();
-                SelectedUser = null;
+                ResetForm();
                 await PopulateUserList();
             }
         }
@@ -205,13 +209,12 @@ namespace ResourcePlanner.Viewmodels
                 return;
 
             this.Userlist.Clear();
-            var users = await _userHandler.ReadAll(UserManager.Instance.InstitutionId);
+            var users = await _userHandler.GetAllUsers(UserManager.Instance.InstitutionId);
             if (users != null)
             {
                 foreach (var user in users)
                     Userlist.Add(user);
             }
-
         }
         private void PopulateUserProfile()
         {
@@ -228,7 +231,7 @@ namespace ResourcePlanner.Viewmodels
 
         private void ResetFields()
         {
-            Name = Email = Phone = SelectedRole = Username = Password = string.Empty;
+            Name = Email = Phone = Username = Password = string.Empty;
         }
     }
 }
