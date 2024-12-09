@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
         mc:Ignorable="d"
         Height="Auto" Width="Auto">
-    <StackPanel Background="LightBlue">
+    <StackPanel>
+        <StackPanel.Background>
+            <ImageBrush ImageSource="/Media/LogoOG.png" 
+                        Stretch="UniformToFill"
+                        Opacity="0.2"/>
+        </StackPanel.Background>
         <Label Content="Program name" FontSize="48"/>
         <Label Content="Login" Margin="0,30,0,0"/>
         <Label Content="Username" Margin="0,30,0,0"/>

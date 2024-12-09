@@ -10,7 +10,12 @@
     <UserControl.Resources>
         <converters:StringIntConverter x:Key="StringIntConverter" />
     </UserControl.Resources>
-    <Grid Background="LightBlue">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Media/LogoOG.png" 
+                        Stretch="UniformToFill"
+                        Opacity="0.2"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>

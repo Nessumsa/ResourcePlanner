@@ -4,21 +4,53 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner"
+        xmlns:converters="clr-namespace:ResourcePlanner.Utilities.Converters"
+        xmlns:viewmodels="clr-namespace:ResourcePlanner.Viewmodels"
         mc:Ignorable="d"
         Title="MainWindow" Height="Auto" Width="750"
         MaxWidth="750" MaxHeight="600"
         MinWidth="750" MinHeight="300">
+    <Window.Resources>
+        <converters:NullToVisibilityConverter x:Key="VisibilityConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BoolVisibilityConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Background="LightGray">
-            <Button Content="Home" Command="{Binding NavigateCommand}" CommandParameter="Homescreen" Margin="5"/>
-            <Button Content="Statistics" Command="{Binding NavigateCommand}" CommandParameter="Statistics" Margin="5"/>
-            <Button Content="Resources" Command="{Binding NavigateCommand}" CommandParameter="Resources" Margin="5"/>
-            <Button Content="Users" Command="{Binding NavigateCommand}" CommandParameter="Users" Margin="5"/>
-            <Button Content="Institution" Command="{Binding NavigateCommand}" CommandParameter="Institution" Margin="5"/>
+        <StackPanel Orientation="Horizontal" 
+                    Grid.Row="0" 
+                    Background="LightGray">
+            <ToggleButton Content="Login"
+                    Name="LogOnToggleButton"
+                    Command="{Binding NavigateCommand}"
+                    CommandParameter="LogOn"
+                    Visibility="{Binding LoginVisibility, Converter={StaticResource BoolVisibilityConverter}}"
+                    />
+            <Button Content="Home" 
+                    Command="{Binding NavigateCommand}" 
+                    CommandParameter="Homescreen"/>
+            <Button Content="Statistics" 
+                    Command="{Binding NavigateCommand}" 
+                    CommandParameter="Statistics"
+                    Visibility="{Binding LoggedIn, Converter={StaticResource BoolVisibilityConverter}}"
+                    />
+            <Button Content="Resources" 
+                    Command="{Binding NavigateCommand}" 
+                    CommandParameter="Resources"
+                    Visibility="{Binding LoggedIn, Converter={StaticResource BoolVisibilityConverter}}"
+                    />
+            <Button Content="Users" 
+                    Command="{Binding NavigateCommand}" 
+                    CommandParameter="Users"
+                    Visibility="{Binding LoggedIn, Converter={StaticResource BoolVisibilityConverter}}"
+                    />
+            <Button Content="Institution" 
+                    Command="{Binding NavigateCommand}" 
+                    CommandParameter="Institution"
+                    Visibility="{Binding LoggedIn, Converter={StaticResource BoolVisibilityConverter}}"
+                    />
         </StackPanel>
         <ContentControl Content="{Binding CurrentView}" Grid.Row="1"/>
     </Grid>

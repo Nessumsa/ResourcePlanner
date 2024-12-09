@@ -9,7 +9,12 @@
     <UserControl.DataContext>
         <local:StatisticsViewModel/>
     </UserControl.DataContext>
-    <StackPanel Background="LightBlue" >
+    <StackPanel>
+        <StackPanel.Background>
+            <ImageBrush ImageSource="/Media/LogoOG.png" 
+                        Stretch="UniformToFill"
+                        Opacity="0.2"/>
+        </StackPanel.Background>
         <TextBlock Text="This is the statistics view" 
                    HorizontalAlignment="Center" 
                    VerticalAlignment="Center" 

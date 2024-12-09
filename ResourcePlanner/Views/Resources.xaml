@@ -4,13 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcePlanner.Viewmodels"
+        xmlns:converters="clr-namespace:ResourcePlanner.Utilities.Converters"
         mc:Ignorable="d"
-        Name="UserControl"
         Height="Auto" Width="Auto">
     <UserControl.DataContext>
         <local:ResourcesViewModel/>
     </UserControl.DataContext>
-    <Grid Background="LightBlue">
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullVisibilityConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BoolVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/Media/LogoOG.png" 
+                Stretch="UniformToFill"
+                Opacity="0.2"/>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="1.5*"/>
@@ -21,26 +30,45 @@
             <RowDefinition Height="5*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ListView Grid.RowSpan="3"/>
+        <ListView Grid.Column="0" 
+          Grid.RowSpan="3"
+          Name="ResourceListView"
+          ItemsSource="{Binding Resourcelist}" 
+          SelectedItem="{Binding SelectedResource, Mode=TwoWay}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Resources"
+                            DisplayMemberBinding="{Binding Name}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
         <Label Content="Create new resource" 
                FontSize="28" 
                Grid.Column="1" 
                Grid.ColumnSpan="2"/>
+        <ToggleButton Content="Error report"
+                Name="ErrorButton"
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                Visibility="{Binding ElementName=ResourceListView, Path=SelectedItem, Converter={StaticResource BoolVisibilityConverter}}"
+                />
         <StackPanel Grid.Column="1" 
                     Grid.Row="1"
                     HorizontalAlignment="Center">
             <Label Content="Enter the name of the resource"/>
-            <TextBox/>
+            <TextBox Text="{Binding Name}"/>
             <Label Content="Write a description"/>
-            <TextBox/>
+            <TextBox Text="{Binding Description}"/>
+            <Label Content="Describe the error" Margin="0,20,0,5" Visibility="{Binding ElementName=ErrorButton, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}"/>
+            <TextBox Text="Set binding for text" Visibility="{Binding ElementName=ErrorButton, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}"/>
         </StackPanel>
         <Grid Grid.Column="2" 
               Grid.Row="1">
             <StackPanel Grid.Row="0"
                         HorizontalAlignment="Center">
-                <Image Source="/Media/placeHolder.jpg"/>
+                <Image Source="/Media/LogoOG.png" Width="200" Stretch="UniformToFill"/>
                 <Label Content="Choose a picture"/>
-                <TextBox Width="Auto"/>
+                <TextBox Width="Auto" Text="{Binding ImgPath}"/>
                 <Button Content="Choose"/>
             </StackPanel>
             
@@ -48,13 +76,19 @@
         <Grid       Grid.Row="2"
                     Grid.Column="1"
                     Grid.ColumnSpan="2">
+            <Button Content="Setup new resource"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Left"
+                    Command="{Binding MakeNewCMD}"/>
+            <Button Content="Delete"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center"
+                    Command="{Binding DeleteCMD}"/>
             <Button Content="Save"  
                     VerticalAlignment="Bottom" 
                     HorizontalAlignment="Right"
                     Command="{Binding SaveCMD}"/>
-            <Button Content="Setup new resource"
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Left"/>
+            
         </Grid>
     </Grid>
 </UserControl>

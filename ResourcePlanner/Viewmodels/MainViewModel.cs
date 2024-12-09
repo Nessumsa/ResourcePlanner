@@ -19,6 +19,26 @@ namespace ResourcePlanner.Viewmodels
                 OnPropertyChanged();
             }
         }
+        private bool _loginVisibility = true;
+        public bool LoginVisibility
+        {
+            get => _loginVisibility;
+            set
+            {
+                _loginVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _loggedIn = false;
+        public bool LoggedIn
+        {
+            get => _loggedIn;
+            set
+            {
+                _loggedIn = value;
+                OnPropertyChanged();
+            }
+        }
 
         public UserControl LogOnScreenControl { get; }
         public UserControl HomescreenControl { get; }
@@ -26,8 +46,13 @@ namespace ResourcePlanner.Viewmodels
         public UserControl ResourcesControl { get; }
         public UserControl UsersControl { get; }
         public UserControl InstitutionControl { get; }
-
         public ICommand NavigateCommand { get; }
+
+        public void ChangeBool()
+        {
+            LoggedIn = true;
+            LoginVisibility = false;
+        }
 
         public MainViewModel()
         {
@@ -41,6 +66,8 @@ namespace ResourcePlanner.Viewmodels
             CurrentView = LogOnScreenControl;
 
             NavigateCommand = new RelayCommandNew(ExecuteNavigation);
+
+            LogOnScreenViewModel.UserLoggedIn += ChangeBool;
 
             LogOnScreenViewModel.UserLoggedIn += OnUserLoggedIn;
         }
@@ -66,7 +93,7 @@ namespace ResourcePlanner.Viewmodels
                 case "Institution":
                     CurrentView = InstitutionControl;
                     break;
-                case "LogOnScreen":
+                case "LogOn":
                     CurrentView = LogOnScreenControl;
                     break;
                 default:

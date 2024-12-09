@@ -21,7 +21,7 @@ namespace ResourcePlanner.Infrastructure.Adapters
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<Institution>(content);
             }
-            throw new HttpRequestException($"Failed to fetch user with ID:{institutionId}.");
+            throw new HttpRequestException($"Failed to fetch institution with ID:{institutionId}.");
         }
 
         public async Task<bool> UpdateAsync(Institution entity)

@@ -1,29 +1,201 @@
-﻿using ResourcePlanner.Models;
+﻿using ResourcePlanner.Domain;
+using ResourcePlanner.Infrastructure.Adapters;
+using ResourcePlanner.Infrastructure;
+using ResourcePlanner.Models;
+using ResourcePlanner.UseCases;
 using ResourcePlanner.Utilities;
 using ResourcePlanner.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows;
 
 namespace ResourcePlanner.Viewmodels
 {
-    class ResourcesViewModel
+    class ResourcesViewModel : Bindable
     {
-        public ResourcesModel resources;
-        public ICommand saveButton { get; }
+        private ResourceHandler? _resourceHandler;
+
+        public ICommand MakeNewCMD { get; }
+        public ICommand DeleteCMD { get; }
+        public RelayCommand SaveCMD { get; private set; }
+
+        private ObservableCollection<Resource> _resourceList;
+        public ObservableCollection<Resource> Resourcelist
+        {
+            get { return _resourceList; }
+            set
+            {
+                _resourceList = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Resource? _selectedResource;
+        public Resource? SelectedResource
+        {
+            get { return _selectedResource; }
+            set
+            {
+                System.Diagnostics.Debug.WriteLine(UserManager.Instance.InstitutionId);
+                _selectedResource = value;
+                OnPropertyChanged();
+                PopulateResourceProfile();
+                SaveCMD.UpdateCommand(Update, IsResourceSelected);
+            }
+        }
+
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set
+            {
+                _description = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _imgPath;
+        public string ImgPath
+        {
+            get { return _imgPath; }
+            set
+            {
+                _imgPath = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
         public ResourcesViewModel()
         {
-            saveButton = new RelayCommand(Save_Button_Click, CanButtonClick);
+            this.MakeNewCMD = new RelayCommand(ResetForm, IsResourceSelected);
+            this.DeleteCMD = new RelayCommand(Delete, IsResourceSelected);
+            this.SaveCMD = new RelayCommand(Create, CanCreate);
+
+            this._resourceList = new ObservableCollection<Resource>();
+
+            this._name = string.Empty;
+            this._description = string.Empty;
+            this._imgPath = string.Empty;
+
+            LogOnScreenViewModel.UserLoggedIn += InitView;
         }
 
-        private void Save_Button_Click()
+        private void ResetForm()
         {
-            System.Diagnostics.Debug.WriteLine(resources.name); //Implement update institution function
+            ResetFields();
+            SelectedResource = null;
+            SaveCMD.UpdateCommand(Create, CanCreate);
         }
-        private bool CanButtonClick() => resources != null ? true : false;
+
+        private async void Create()
+        {
+            if (UserManager.Instance.InstitutionId == null || _resourceHandler == null)
+                return;
+
+            Resource resource = new Resource(Name, Description, ImgPath, UserManager.Instance.InstitutionId);
+            bool resourceCreated = await _resourceHandler.CreateResource(resource);
+            if (resourceCreated)
+            {
+                ResetFields();
+                SelectedResource = null;
+                await PopulateResourceList();
+            }
+        }
+        private bool CanCreate()
+        {
+            return !string.IsNullOrEmpty(Name) &&
+                   !string.IsNullOrEmpty(Description) &&
+                   !string.IsNullOrEmpty(ImgPath);
+        }
+
+        private async void Update()
+        {
+            if (SelectedResource == null || _resourceHandler == null)
+                return;
+
+            SelectedResource.Name = Name;
+            SelectedResource.Description = Description;
+            SelectedResource.ImgPath = ImgPath;
+
+
+            bool resourceUpdated = await _resourceHandler.UpdateResource(SelectedResource);
+            if (resourceUpdated)
+            {
+                ResetForm();
+                await PopulateResourceList();
+            }
+
+        }
+
+        private async void Delete()
+        {
+            if (SelectedResource == null || SelectedResource.Id == null || _resourceHandler == null)
+                return;
+
+            bool resourceDeleted = await _resourceHandler.DeleteResource(SelectedResource.Id);
+            if (resourceDeleted)
+            {
+                ResetForm();
+                await PopulateResourceList();
+            }
+        }
+        private bool IsResourceSelected() => SelectedResource != null;
+
+        private async void InitView()
+        {
+            ResourceHttpAdapter resourceHttpAdapter = new ResourceHttpAdapter(RestApiClient.Instance.Client);
+            this._resourceHandler = new ResourceHandler(resourceHttpAdapter);
+
+            await PopulateResourceList();
+        }
+
+        private async Task PopulateResourceList()
+        {
+            if (UserManager.Instance.InstitutionId == null || _resourceHandler == null)
+                return;
+
+            this.Resourcelist.Clear();
+            var resources = await _resourceHandler.ReadAll(UserManager.Instance.InstitutionId);
+            if (resources != null)
+            {
+                foreach (var resource in resources)
+                    Resourcelist.Add(resource);
+            }
+        }
+        private void PopulateResourceProfile()
+        {
+            if (SelectedResource == null)
+                return;
+
+            Name = SelectedResource.Name ?? string.Empty;
+            Description = SelectedResource.Description ?? string.Empty;
+            ImgPath = SelectedResource.ImgPath ?? string.Empty;
+        }
+
+        private void ResetFields()
+        {
+            Name = Description = ImgPath = string.Empty;
+        }
+        
     }
 }
+

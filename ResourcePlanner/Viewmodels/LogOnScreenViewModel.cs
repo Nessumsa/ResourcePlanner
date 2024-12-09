@@ -2,10 +2,12 @@
 using ResourcePlanner.UseCases;
 using ResourcePlanner.Utilities;
 using System.Diagnostics;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ResourcePlanner.Viewmodels
 {
+    
     public class LogOnScreenViewModel : Bindable
     {
         public static event Action? UserLoggedIn;
