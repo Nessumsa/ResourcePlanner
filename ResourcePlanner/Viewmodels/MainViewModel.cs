@@ -1,4 +1,4 @@
-﻿using ResourcePlanner.Utilities;
+﻿using ResourcePlanner.Utilities.MVVM;
 using ResourcePlanner.Views;
 using System.ComponentModel;
 using System.Windows.Controls;
@@ -44,6 +44,7 @@ namespace ResourcePlanner.Viewmodels
         public UserControl HomescreenControl { get; }
         public UserControl StatisticsControl { get; }
         public UserControl ResourcesControl { get; }
+        public UserControl ErrorReportsControl { get; }
         public UserControl UsersControl { get; }
         public UserControl InstitutionControl { get; }
         public ICommand NavigateCommand { get; }
@@ -60,6 +61,7 @@ namespace ResourcePlanner.Viewmodels
             HomescreenControl = new Homescreen();
             StatisticsControl = new Statistics();
             ResourcesControl = new Resources();
+            ErrorReportsControl = new ErrorReports();
             UsersControl = new Users();
             InstitutionControl = new Institution();
 
@@ -86,6 +88,9 @@ namespace ResourcePlanner.Viewmodels
                     break;
                 case "Resources":
                     CurrentView = ResourcesControl;
+                    break;
+                case "Error Reports":
+                    CurrentView = ErrorReportsControl;
                     break;
                 case "Users":
                     CurrentView = UsersControl;

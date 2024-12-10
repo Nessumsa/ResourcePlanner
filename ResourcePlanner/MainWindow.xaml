@@ -41,6 +41,11 @@
                     CommandParameter="Resources"
                     Visibility="{Binding LoggedIn, Converter={StaticResource BoolVisibilityConverter}}"
                     />
+            <Button Content="Error Reports" 
+                    Command="{Binding NavigateCommand}" 
+                    CommandParameter="Error Reports"
+                    Visibility="{Binding LoggedIn, Converter={StaticResource BoolVisibilityConverter}}"
+                    />
             <Button Content="Users" 
                     Command="{Binding NavigateCommand}" 
                     CommandParameter="Users"

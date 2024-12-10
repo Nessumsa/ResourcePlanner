@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ResourcePlanner.Interfaces
+namespace ResourcePlanner.Interfaces.Managers
 {
     public interface IRestApiClient
     {

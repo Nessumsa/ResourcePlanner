@@ -1,22 +1,35 @@
 ﻿using ResourcePlanner.Domain;
-using ResourcePlanner.Infrastructure;
 using ResourcePlanner.Infrastructure.Adapters;
+using ResourcePlanner.Infrastructure.Managers;
 using ResourcePlanner.UseCases;
-using ResourcePlanner.Utilities;
+using ResourcePlanner.Utilities.MVVM;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace ResourcePlanner.Viewmodels
 {
+    /// <summary>
+    /// ViewModel for managing users within the application.
+    /// Provides functionality to create, update, delete, and list users.
+    /// </summary>
     class UsersViewModel : Bindable
     {
+        // Handler for user-related operations.
         private UserHandler? _userHandler;
 
+        /// Command for creating a new user or resetting the form for new user creation.
         public ICommand MakeNewCMD { get; }
+
+        /// Command for deleting a selected user.
         public ICommand DeleteCMD { get; }
+
+        /// Command for saving user details, either by creating or updating.
         public RelayCommand SaveCMD { get; private set; }
 
+        // Observable collection of users.
         private ObservableCollection<User> _userList;
+
+        /// List of users displayed in the UI.
         public ObservableCollection<User> Userlist
         {
             get { return _userList; }
@@ -27,7 +40,10 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
+        // Currently selected user in the UI.
         private User? _selectedUser;
+
+        /// The currently selected user.
         public User? SelectedUser
         {
             get { return _selectedUser; }
@@ -40,6 +56,7 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
+        // Fields for user input.
         private string _name;
         public string Name
         {
@@ -73,9 +90,12 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
+        /// Predefined roles a user can have.
         public string[] Roles { get; } = { "admin", "user" };
+
         private string _selectedRole;
 
+        /// The role selected for the user.
         public string SelectedRole
         {
             get { return _selectedRole; }
@@ -108,6 +128,9 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
+        /// <summary>
+        /// Constructor initializes commands and resets user details.
+        /// </summary>
         public UsersViewModel()
         {
             this.MakeNewCMD = new RelayCommand(ResetForm, IsUserSelected);
@@ -116,16 +139,15 @@ namespace ResourcePlanner.Viewmodels
 
             this._userList = new ObservableCollection<User>();
 
-            this._name = string.Empty;
-            this._email = string.Empty;
-            this._phone = string.Empty;
-            this._selectedRole = string.Empty;
-            this._username = string.Empty;
-            this._password = string.Empty;
+            ResetFields();
 
+            // Subscribe to the UserLoggedIn event to initialize the view.
             LogOnScreenViewModel.UserLoggedIn += InitView;
         }
 
+        /// <summary>
+        /// Resets the form and prepares for creating a new user.
+        /// </summary>
         private void ResetForm()
         {
             ResetFields();
@@ -133,12 +155,15 @@ namespace ResourcePlanner.Viewmodels
             SaveCMD.UpdateCommand(Create, CanCreate);
         }
 
+        /// <summary>
+        /// Creates a new user based on the form inputs.
+        /// </summary>
         private async void Create()
         {
             if (UserManager.Instance.InstitutionId == null || _userHandler == null)
                 return;
 
-            User user = new User(Name, Email, Phone, SelectedRole, Username, Password, UserManager.Instance.InstitutionId);
+            var user = new User(Name, Email, Phone, SelectedRole, Username, Password, UserManager.Instance.InstitutionId);
             bool userCreated = await _userHandler.CreateUser(user);
             if (userCreated)
             {
@@ -147,6 +172,10 @@ namespace ResourcePlanner.Viewmodels
                 await PopulateUserList();
             }
         }
+
+        /// <summary>
+        /// Determines whether the create command can execute.
+        /// </summary>
         private bool CanCreate()
         {
             return !string.IsNullOrEmpty(Name) &&
@@ -157,6 +186,9 @@ namespace ResourcePlanner.Viewmodels
                    !string.IsNullOrEmpty(Password);
         }
 
+        /// <summary>
+        /// Updates details of the selected user.
+        /// </summary>
         private async void Update()
         {
             if (SelectedUser == null || _userHandler == null)
@@ -178,9 +210,11 @@ namespace ResourcePlanner.Viewmodels
                 ResetForm();
                 await PopulateUserList();
             }
-                
         }
 
+        /// <summary>
+        /// Deletes the selected user.
+        /// </summary>
         private async void Delete()
         {
             if (SelectedUser == null || SelectedUser.Id == null || _userHandler == null)
@@ -193,8 +227,15 @@ namespace ResourcePlanner.Viewmodels
                 await PopulateUserList();
             }
         }
+
+        /// <summary>
+        /// Checks if a user is selected.
+        /// </summary>
         private bool IsUserSelected() => SelectedUser != null;
 
+        /// <summary>
+        /// Initializes the view and populates the user list.
+        /// </summary>
         private async void InitView()
         {
             UserHttpAdapter userHttpAdapter = new UserHttpAdapter(RestApiClient.Instance.Client);
@@ -203,6 +244,9 @@ namespace ResourcePlanner.Viewmodels
             await PopulateUserList();
         }
 
+        /// <summary>
+        /// Fetches and populates the list of users.
+        /// </summary>
         private async Task PopulateUserList()
         {
             if (UserManager.Instance.InstitutionId == null || _userHandler == null)
@@ -216,6 +260,10 @@ namespace ResourcePlanner.Viewmodels
                     Userlist.Add(user);
             }
         }
+
+        /// <summary>
+        /// Populates form fields with details of the selected user.
+        /// </summary>
         private void PopulateUserProfile()
         {
             if (SelectedUser == null)
@@ -229,6 +277,9 @@ namespace ResourcePlanner.Viewmodels
             Password = "*****";
         }
 
+        /// <summary>
+        /// Resets form fields to default values.
+        /// </summary>
         private void ResetFields()
         {
             Name = Email = Phone = Username = Password = string.Empty;

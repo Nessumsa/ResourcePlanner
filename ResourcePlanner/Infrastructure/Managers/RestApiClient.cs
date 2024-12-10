@@ -1,11 +1,15 @@
 ﻿using Newtonsoft.Json;
 using ResourcePlanner.DTOs;
-using ResourcePlanner.Interfaces;
+using ResourcePlanner.Interfaces.Managers;
 using System.Net.Http;
 using System.Text;
 
-namespace ResourcePlanner.Infrastructure
+namespace ResourcePlanner.Infrastructure.Managers
 {
+    /// <summary>
+    /// A singleton class that manages the HttpClient for communication 
+    /// with the backend API and handles the access token for authentication.
+    /// </summary>
     public class RestApiClient : IRestApiClient
     {
         private static RestApiClient? _instance;
@@ -13,6 +17,9 @@ namespace ResourcePlanner.Infrastructure
         private string _accessToken;
         private bool _initialized = false;
 
+        /// <summary>
+        /// Gets the singleton instance of the RestApiClient.
+        /// </summary>
         public static RestApiClient Instance
         {
             get
@@ -23,6 +30,10 @@ namespace ResourcePlanner.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Gets the HttpClient instance used for communication with the backend API.
+        /// Throws an exception if the client is not initialized.
+        /// </summary>
         public HttpClient Client
         {
             get
@@ -36,16 +47,22 @@ namespace ResourcePlanner.Infrastructure
 
         private RestApiClient()
         {
-            this._accessToken = "";
+            _accessToken = "";
         }
 
+        /// <summary>
+        /// Establishes a connection to the backend API by initializing 
+        /// the HttpClient with the specified host and port.
+        /// </summary>
+        /// <param name="host">The host address of the API.</param>
+        /// <param name="port">The port number of the API.</param>
+        /// <returns>True if the connection is successful, otherwise false.</returns>
         public async Task<bool> ConnectAsync(string host, string port)
         {
             string baseUrl = $"http://{host}:{port}";
             _client = new HttpClient { BaseAddress = new Uri(baseUrl) };
 
             var response = await _client.GetAsync("/Test");
-            //return response.IsSuccessStatusCode
             if (response != null)
             {
                 _initialized = true;
@@ -57,6 +74,11 @@ namespace ResourcePlanner.Infrastructure
             return false;
         }
 
+        /// <summary>
+        /// Disconnects from the backend API by disposing of the HttpClient 
+        /// and resetting the connection status.
+        /// </summary>
+        /// <returns>Always returns true.</returns>
         public bool DisconnectAsync()
         {
             _client?.Dispose();
@@ -65,6 +87,13 @@ namespace ResourcePlanner.Infrastructure
             return true;
         }
 
+        /// <summary>
+        /// Logs in a user by sending their credentials to the backend API 
+        /// and retrieves an access token for further requests.
+        /// </summary>
+        /// <param name="username">The username of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>True if the login is successful and the user is an admin, otherwise false.</returns>
         public async Task<bool> LoginAsync(string username, string password)
         {
             LoginRequestDto request = new() { Username = username, Password = password };

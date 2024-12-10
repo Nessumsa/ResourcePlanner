@@ -1,9 +1,6 @@
 ﻿using ResourcePlanner.Domain;
 using ResourcePlanner.Infrastructure.Adapters;
-using ResourcePlanner.Infrastructure;
-using ResourcePlanner.Models;
 using ResourcePlanner.UseCases;
-using ResourcePlanner.Utilities;
 using ResourcePlanner.Views;
 using System;
 using System.Collections.Generic;
@@ -13,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
+using ResourcePlanner.Infrastructure.Managers;
+using ResourcePlanner.Utilities.MVVM;
 
 namespace ResourcePlanner.Viewmodels
 {
