@@ -104,7 +104,9 @@ namespace ResourcePlanner.Viewmodels
             SelectedResource = null;
             SaveCMD.UpdateCommand(Create, CanCreate);
         }
-
+        /// <summary>
+        /// Function to create a resource and send it to the backend via the resource handler and adapter
+        /// </summary>
         private async void Create()
         {
             if (UserManager.Instance.InstitutionId == null || _resourceHandler == null)
@@ -125,7 +127,9 @@ namespace ResourcePlanner.Viewmodels
                    !string.IsNullOrEmpty(Description) &&
                    !string.IsNullOrEmpty(ImgPath);
         }
-
+        /// <summary>
+        /// Function to update the variables of an already existing resource using the handler and adapter
+        /// </summary>
         private async void Update()
         {
             if (SelectedResource == null || _resourceHandler == null)
@@ -144,7 +148,9 @@ namespace ResourcePlanner.Viewmodels
             }
 
         }
-
+        /// <summary>
+        /// Function to delete a resource from the database using the handler and adapter
+        /// </summary>
         private async void Delete()
         {
             if (SelectedResource == null || SelectedResource.Id == null || _resourceHandler == null)
@@ -158,7 +164,9 @@ namespace ResourcePlanner.Viewmodels
             }
         }
         private bool IsResourceSelected() => SelectedResource != null;
-
+        /// <summary>
+        /// This method is called when the user logs on and calls the populate resource list method.
+        /// </summary>
         private async void InitView()
         {
             ResourceHttpAdapter resourceHttpAdapter = new ResourceHttpAdapter(RestApiClient.Instance.Client);
@@ -166,7 +174,10 @@ namespace ResourcePlanner.Viewmodels
 
             await PopulateResourceList();
         }
-
+        /// <summary>
+        /// Method to retrieve all the resources associated with the institutionID of the user logging on.
+        /// </summary>
+        /// <returns></returns>
         private async Task PopulateResourceList()
         {
             if (UserManager.Instance.InstitutionId == null || _resourceHandler == null)
@@ -180,6 +191,9 @@ namespace ResourcePlanner.Viewmodels
                     Resourcelist.Add(resource);
             }
         }
+        /// <summary>
+        /// Method used for loading the variables of a selected resource from the listview.
+        /// </summary>
         private void PopulateResourceProfile()
         {
             if (SelectedResource == null)

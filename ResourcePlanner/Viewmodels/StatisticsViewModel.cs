@@ -1,8 +1,9 @@
 ﻿using ResourcePlanner.Domain;
 using ResourcePlanner.Infrastructure;
 using ResourcePlanner.Infrastructure.Adapters;
+using ResourcePlanner.Infrastructure.Managers;
 using ResourcePlanner.UseCases;
-using ResourcePlanner.Utilities;
+using ResourcePlanner.Utilities.MVVM;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
