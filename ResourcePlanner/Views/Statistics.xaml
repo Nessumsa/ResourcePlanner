@@ -20,10 +20,10 @@
                    VerticalAlignment="Center" 
                    FontSize="24"/>
         <Label Content="Start date"/>
-        <DatePicker />
+        <DatePicker SelectedDate="{Binding StartDate}"/>
         <Label Content="End date"/>
-        <DatePicker/>
+        <DatePicker SelectedDate="{Binding EndTime}"/>
         <Button Content="Generate rapport" 
-                Click="Generate_Button_Click"/>
+                Command="{Binding GenerateCMD}"/>
     </StackPanel>
 </UserControl>
