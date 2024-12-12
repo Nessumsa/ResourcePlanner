@@ -96,6 +96,9 @@ namespace ResourcePlanner.Infrastructure.Managers
         /// <returns>True if the login is successful and the user is an admin, otherwise false.</returns>
         public async Task<bool> LoginAsync(string username, string password)
         {
+            if (_client == null)
+                return false;
+
             LoginRequestDto request = new() { Username = username, Password = password };
 
             var jsonContent = new StringContent(
@@ -110,13 +113,16 @@ namespace ResourcePlanner.Infrastructure.Managers
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var loginResponse = JsonConvert.DeserializeObject<LoginResponseDto>(responseContent);
 
-                if (loginResponse.UserRole.Equals("admin") && loginResponse?.AccessToken != null)
+                if (loginResponse == null)
+                    return false;
+
+                if (loginResponse.UserRole!.Equals("admin") && loginResponse?.AccessToken != null)
                 {
                     _accessToken = loginResponse.AccessToken;
                     _client.DefaultRequestHeaders.Authorization =
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _accessToken);
 
-                    UserManager.Instance.Initialize(loginResponse.UserId, loginResponse.InstitutionId);
+                    UserManager.Instance.Initialize(loginResponse.UserId!, loginResponse.InstitutionId!);
                     return true;
                 }
             }

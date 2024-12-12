@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ResourcePlanner.Domain
 {
-    class Resource
+    public class Resource
     {
         public string? Id { get; set; }
         public string? Name { get; set; }

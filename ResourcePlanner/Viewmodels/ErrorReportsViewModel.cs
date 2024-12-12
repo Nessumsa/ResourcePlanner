@@ -1,6 +1,7 @@
 ﻿using ResourcePlanner.Domain;
 using ResourcePlanner.Infrastructure.Adapters;
 using ResourcePlanner.Infrastructure.Managers;
+using ResourcePlanner.Interfaces.Adapters.CRUD;
 using ResourcePlanner.UseCases;
 using ResourcePlanner.Utilities.MVVM;
 using System.Collections.ObjectModel;
@@ -47,12 +48,13 @@ namespace ResourcePlanner.Viewmodels
         }
 
         // Fields for error report details.
-        private string? _dateCreated;
-        private string? _resource;
-        private string? _description;
+        private string _dateCreated;
+        private string _user;
+        private string _resource;
+        private string _description;
 
         /// Date the selected error report was created.
-        public string? DateCreated
+        public string DateCreated
         {
             get { return _dateCreated; }
             set
@@ -62,8 +64,19 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
+        /// User the selected error report was created by.
+        public string User
+        {
+            get { return _user; }
+            set
+            {
+                _user = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// Resource related to the selected error report.
-        public string? Resource
+        public string Resource
         {
             get { return _resource; }
             set
@@ -74,7 +87,7 @@ namespace ResourcePlanner.Viewmodels
         }
 
         /// Description of the selected error report.
-        public string? Description
+        public string Description
         {
             get { return _description; }
             set
@@ -91,6 +104,7 @@ namespace ResourcePlanner.Viewmodels
 
             this._errorReportList = new ObservableCollection<ErrorReport>();
             this._dateCreated = string.Empty;
+            this._user = string.Empty;
             this._resource = string.Empty;
             this._description = string.Empty;
 
@@ -131,7 +145,11 @@ namespace ResourcePlanner.Viewmodels
         /// </summary>
         private async void InitView()
         {
-            ErrorReportHttpAdapter errorReportHttpAdapter = new ErrorReportHttpAdapter(RestApiClient.Instance.Client);
+            IReadAdapter<Resource, string> resourceAdapter = new ResourceHttpAdapter(RestApiClient.Instance.Client);
+            IReadAdapter<User, string> userAdapter = new UserHttpAdapter(RestApiClient.Instance.Client);
+            ErrorReportHttpAdapter errorReportHttpAdapter = new ErrorReportHttpAdapter(RestApiClient.Instance.Client,
+                                                                                       resourceAdapter, 
+                                                                                       userAdapter);
             this._errorReportHandler = new ErrorReportHandler(errorReportHttpAdapter);
 
             await PopulateList();
@@ -163,8 +181,9 @@ namespace ResourcePlanner.Viewmodels
                 return;
 
             DateCreated = SelectedErrorReport.CreatedDate.ToShortDateString();
-            Resource = SelectedErrorReport.ResourceId; 
-            Description = SelectedErrorReport.Description;
+            User = SelectedErrorReport.AssociatedUser?.Name ?? string.Empty;
+            Resource = SelectedErrorReport.AssociatedResource?.Name ?? string.Empty;
+            Description = SelectedErrorReport.Description ?? string.Empty;
         }
 
         /// <summary>
@@ -172,7 +191,7 @@ namespace ResourcePlanner.Viewmodels
         /// </summary>
         private void ResetFields()
         {
-            DateCreated = Resource = Description = string.Empty;
+            DateCreated = User = Resource = Description = string.Empty;
         }
     }
 }
