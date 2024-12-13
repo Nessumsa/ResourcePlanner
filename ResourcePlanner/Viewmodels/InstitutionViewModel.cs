@@ -4,6 +4,7 @@ using ResourcePlanner.Infrastructure.Managers;
 using ResourcePlanner.UseCases;
 using ResourcePlanner.Utilities.MVVM;
 using ResourcePlanner.Utilities.Regexes;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ResourcePlanner.Viewmodels
@@ -107,7 +108,12 @@ namespace ResourcePlanner.Viewmodels
             _instituttion.CloseTime = EndTime;
             _instituttion.BookingInterval = Interval;
 
-            await _institutionHandler.UpdateInstitution(_instituttion);
+            bool updateSuccess = await _institutionHandler.UpdateInstitution(_instituttion);
+            if (updateSuccess)
+                MessageBox.Show("Institution has been updated successfully", 
+                                "Success", 
+                                MessageBoxButton.OK, 
+                                MessageBoxImage.None);
         }
 
         /// <summary>
@@ -177,6 +183,10 @@ namespace ResourcePlanner.Viewmodels
                 SelectedImagePath = string.Empty;
 
                 await _institutionHandler.UpdateInstitution(_instituttion);
+                MessageBox.Show("Image has been uploaded successfully",
+                                "Success",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.None);
             }
         }
 

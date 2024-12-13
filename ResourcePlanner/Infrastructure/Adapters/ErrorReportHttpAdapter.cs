@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using ResourcePlanner.Domain;
 using ResourcePlanner.Interfaces.Adapters;
+using ResourcePlanner.Interfaces.Adapters.CRUD;
 using System.Net.Http;
 using System.Text;
 
@@ -13,13 +14,23 @@ namespace ResourcePlanner.Infrastructure.Adapters
     public class ErrorReportHttpAdapter : IErrorReportAdapter
     {
         private readonly HttpClient _client;
+        private readonly IReadAdapter<Resource, string> _resourceAdapter;
+        private readonly IReadAdapter<User, string> _userAdapter;
 
         /// <summary>
-        /// Initializes the adapter with an HttpClient for communication.
+        /// Initializes the adapter with an HttpClient for communication
+        /// and adapters for retrieving associated resources and users.
         /// </summary>
-        public ErrorReportHttpAdapter(HttpClient client)
+        /// <param name="client">The HttpClient used for making requests to the backend API.</param>
+        /// <param name="resourceAdapter">An adapter for fetching resources by their string ID.</param>
+        /// <param name="userAdapter">An adapter for fetching users by their string ID.</param>
+        public ErrorReportHttpAdapter(HttpClient client, 
+                                      IReadAdapter<Resource, string> resourceAdapter,
+                                      IReadAdapter<User, string> userAdapter)
         {
             this._client = client;
+            this._resourceAdapter = resourceAdapter;
+            this._userAdapter = userAdapter;
         }
 
         /// <summary>
@@ -42,14 +53,32 @@ namespace ResourcePlanner.Infrastructure.Adapters
         }
 
         /// <summary>
-        /// Retrieves all active error reports for a given institution.
+        /// Retrieves all active error reports for a given institution and populates their associated User and Resource.
         /// </summary>
         /// <param name="institutionId">The ID of the institution for which to fetch active error reports.</param>
-        /// <returns>A collection of active error reports.</returns>
+        /// <returns>A collection of active error reports with associated resources and users.</returns>
         public async Task<IEnumerable<ErrorReport>> ReadAllActiveAsync(string institutionId)
         {
             var allErrorReports = await ReadAllAsync(institutionId);
-            return allErrorReports?.Where(report => !report.Resolved) ?? Enumerable.Empty<ErrorReport>();
+
+            var activeErrorReports = allErrorReports?.Where(report => !report.Resolved) ?? Enumerable.Empty<ErrorReport>();
+
+            foreach (var report in activeErrorReports)
+            {
+                if (!string.IsNullOrEmpty(report.ResourceId))
+                {
+                    var resource = await _resourceAdapter.ReadAsync(report.ResourceId);
+                    report.AssociatedResource = resource;
+                }
+
+                if (!string.IsNullOrEmpty(report.UserId))
+                {
+                    var user = await _userAdapter.ReadAsync(report.UserId);
+                    report.AssociatedUser = user;
+                }
+            }
+
+            return activeErrorReports;
         }
 
         /// <summary>

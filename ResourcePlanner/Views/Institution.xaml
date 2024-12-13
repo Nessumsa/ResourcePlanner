@@ -16,9 +16,14 @@
                         Stretch="UniformToFill"
                         Opacity="0.2"/>
         </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition MinHeight="50" Height="*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <Label 
@@ -29,31 +34,40 @@
             <Label Content="Open hours (hh:mm)"/>
             <TextBox Text="{Binding StartTime}" />
             <Label Content="Close hours (hh:mm)"/>
-            <TextBox Text="{Binding EndTime}" />
+            <TextBox Text="{Binding EndTime}" Width="200" Margin="0,0,0,10" />
             <Label Content="Book interval (min)"/>
             <TextBox Text="{Binding Interval, 
                      Converter={StaticResource StringIntConverter},
-                     Mode=TwoWay}" />
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Content="New image" Width="85" Command="{Binding ChooseCMD}"/>
-                    <Button Content="Upload image" Width="85" Command="{Binding UploadCMD}"/>
-                </StackPanel>
-                <StackPanel Grid.Row="1">
-                    <Label Content="{Binding SelectedImagePath}" FontSize="8"/>
-                </StackPanel>
-            </Grid>
-            
-
+                     Mode=TwoWay}" Width="200" Margin="0,0,0,10" />
         </StackPanel>
-        <Button     Grid.Row="1"
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center" 
+                        Margin="10">
+                <Image Source="/Media/LogoOG.png" Width="200" Stretch="Uniform" Margin="0,10,0,0"/>
+                <Label Content="Choose a picture"/>
+                <TextBox Width="200" Text="{Binding SelectedImagePath}" IsReadOnly="True"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center" >
+                <Button Content="New image" Width="85" Margin="5,0,5,0" Command="{Binding ChooseCMD}"/>
+                <Button Content="Upload image" Width="85" Margin="5,0,5,0" Command="{Binding UploadCMD}"/>
+            </StackPanel>
+        </Grid>
+        <Button     Grid.Row="2"
+                    Grid.Column="1"
                     Content="Save" 
+                    Width="85"
                     HorizontalAlignment="Right" 
                     VerticalAlignment="Bottom"
+                    Margin="10"
                     Command="{Binding SaveCMD}"/>
     </Grid>
 </UserControl>
