@@ -42,16 +42,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Label Content="Create new resource" 
+        <Label Content="Manage resources" 
                FontSize="28" 
                Grid.Column="1" 
                Grid.ColumnSpan="2"/>
-        <ToggleButton Content="Error report"
-                Name="ErrorButton"
-                Grid.Column="2"
-                HorizontalAlignment="Right"
-                Visibility="{Binding ElementName=ResourceListView, Path=SelectedItem, Converter={StaticResource BoolVisibilityConverter}}"
-                />
         <StackPanel Grid.Column="1" 
                     Grid.Row="1"
                     HorizontalAlignment="Center">
@@ -59,8 +53,6 @@
             <TextBox Text="{Binding Name}"/>
             <Label Content="Write a description"/>
             <TextBox Text="{Binding Description}"/>
-            <Label Content="Describe the error" Margin="0,20,0,5" Visibility="{Binding ElementName=ErrorButton, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}"/>
-            <TextBox Text="Set binding for text" Visibility="{Binding ElementName=ErrorButton, Path=IsChecked, Converter={StaticResource BoolVisibilityConverter}}"/>
         </StackPanel>
         <Grid Grid.Column="2" 
               Grid.Row="1">

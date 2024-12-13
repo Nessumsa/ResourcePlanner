@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <Label 
-                    Content="This is the institution view" 
+                    Content="Institution settings" 
                     HorizontalAlignment="Center"  
                     FontSize="24"
                     Width="Auto"/>
