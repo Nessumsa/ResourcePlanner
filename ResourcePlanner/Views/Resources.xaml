@@ -66,10 +66,17 @@
               Grid.Row="1">
             <StackPanel Grid.Row="0"
                         HorizontalAlignment="Center">
-                <Image Source="/Media/LogoOG.png" Width="200" Stretch="UniformToFill"/>
+                <Image Source="{Binding SelectedImagePath}" Width="200" Stretch="UniformToFill"/>
                 <Label Content="Choose a picture"/>
-                <TextBox Width="Auto" Text="{Binding ImgPath}"/>
-                <Button Content="Choose"/>
+                <TextBox Width="Auto" Text="{Binding SelectedImagePath}"/>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Button Content="Choose"
+                            Command="{Binding ChooseCMD}"/>
+                    <Button Content="Upload"
+                            Command="{Binding UploadCMD}"/>
+                </StackPanel>
+                
             </StackPanel>
             
         </Grid>

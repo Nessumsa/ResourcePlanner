@@ -18,10 +18,13 @@ namespace ResourcePlanner.Viewmodels
     class ResourcesViewModel : Bindable
     {
         private ResourceHandler? _resourceHandler;
+        private ImageHandler? _imageHandler;
 
         public ICommand MakeNewCMD { get; }
         public ICommand DeleteCMD { get; }
         public RelayCommand SaveCMD { get; private set; }
+        public ICommand ChooseCMD { get; }
+        public ICommand UploadCMD { get; }
 
         private ObservableCollection<Resource> _resourceList;
         public ObservableCollection<Resource> Resourcelist
@@ -70,13 +73,13 @@ namespace ResourcePlanner.Viewmodels
             }
         }
 
-        private string _imgPath;
-        public string ImgPath
+        private string _selectedImagePath;
+        public string SelectedImagePath
         {
-            get { return _imgPath; }
+            get { return _selectedImagePath; }
             set
             {
-                _imgPath = value;
+                _selectedImagePath = value;
                 OnPropertyChanged();
             }
         }
@@ -88,14 +91,57 @@ namespace ResourcePlanner.Viewmodels
             this.MakeNewCMD = new RelayCommand(ResetForm, IsResourceSelected);
             this.DeleteCMD = new RelayCommand(Delete, IsResourceSelected);
             this.SaveCMD = new RelayCommand(Create, CanCreate);
+            this.ChooseCMD = new RelayCommand(ChooseImage, CanChooseImage);
+            this.UploadCMD = new RelayCommand(UploadImage, CanUploadImage);
 
             this._resourceList = new ObservableCollection<Resource>();
 
             this._name = string.Empty;
             this._description = string.Empty;
-            this._imgPath = string.Empty;
+            this._selectedImagePath = string.Empty;
 
             LogOnScreenViewModel.UserLoggedIn += InitView;
+        }
+
+        private void ChooseImage()
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp"
+            };
+
+            var result = openFileDialog.ShowDialog();
+            if (result == true)
+                SelectedImagePath = openFileDialog.FileName;
+        }
+        private bool CanChooseImage()
+        {
+            return _imageHandler != null;
+        }
+        private async void UploadImage()
+        {
+            if (_imageHandler == null || _resourceHandler == null || _selectedResource == null)
+                return;
+
+            // Delete the previous image if it exists.
+            if (!string.IsNullOrEmpty(_selectedResource.ImgPath))
+                await _imageHandler.DeleteImage(_selectedResource.ImgPath);
+
+            // Upload the new image and update the resource's data.
+            var url = await _imageHandler.UploadImage(SelectedImagePath);
+            if (url != null)
+            {
+                _selectedResource.ImgPath = url;
+                SelectedImagePath = string.Empty;
+
+                await _resourceHandler.UpdateResource(_selectedResource);
+            }
+        }
+        private bool CanUploadImage()
+        {
+            return !string.IsNullOrEmpty(SelectedImagePath) &&
+                   _imageHandler != null &&
+                   _resourceHandler != null;
         }
 
         private void ResetForm()
@@ -112,20 +158,21 @@ namespace ResourcePlanner.Viewmodels
             if (UserManager.Instance.InstitutionId == null || _resourceHandler == null)
                 return;
 
-            Resource resource = new Resource(Name, Description, ImgPath, UserManager.Instance.InstitutionId);
+            Resource resource = new Resource(Name, Description, SelectedImagePath, UserManager.Instance.InstitutionId);
             bool resourceCreated = await _resourceHandler.CreateResource(resource);
             if (resourceCreated)
             {
-                ResetFields();
+                
                 SelectedResource = null;
                 await PopulateResourceList();
+                ResetForm();
             }
         }
         private bool CanCreate()
         {
             return !string.IsNullOrEmpty(Name) &&
                    !string.IsNullOrEmpty(Description) &&
-                   !string.IsNullOrEmpty(ImgPath);
+                   !string.IsNullOrEmpty(SelectedImagePath);
         }
         /// <summary>
         /// Function to update the variables of an already existing resource using the handler and adapter
@@ -137,7 +184,7 @@ namespace ResourcePlanner.Viewmodels
 
             SelectedResource.Name = Name;
             SelectedResource.Description = Description;
-            SelectedResource.ImgPath = ImgPath;
+            SelectedResource.ImgPath = SelectedImagePath;
 
 
             bool resourceUpdated = await _resourceHandler.UpdateResource(SelectedResource);
@@ -171,6 +218,8 @@ namespace ResourcePlanner.Viewmodels
         {
             ResourceHttpAdapter resourceHttpAdapter = new ResourceHttpAdapter(RestApiClient.Instance.Client);
             this._resourceHandler = new ResourceHandler(resourceHttpAdapter);
+            ImageHttpAdapter imageHttpAdapter = new ImageHttpAdapter(RestApiClient.Instance.Client);
+            this._imageHandler = new ImageHandler(imageHttpAdapter);
 
             await PopulateResourceList();
         }
@@ -201,12 +250,12 @@ namespace ResourcePlanner.Viewmodels
 
             Name = SelectedResource.Name ?? string.Empty;
             Description = SelectedResource.Description ?? string.Empty;
-            ImgPath = SelectedResource.ImgPath ?? string.Empty;
+            SelectedImagePath = SelectedResource.ImgPath ?? string.Empty;
         }
 
         private void ResetFields()
         {
-            Name = Description = ImgPath = string.Empty;
+            Name = Description = SelectedImagePath = string.Empty;
         }
         
     }
