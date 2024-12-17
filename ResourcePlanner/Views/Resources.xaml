@@ -42,7 +42,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Label Content="Create new resource" 
+        <Label Content="Manage Resources" 
                FontSize="28" 
                Grid.Column="1" 
                Grid.ColumnSpan="2"/>

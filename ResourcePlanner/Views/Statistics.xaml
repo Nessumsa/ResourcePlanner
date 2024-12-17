@@ -15,7 +15,7 @@
                         Stretch="UniformToFill"
                         Opacity="0.2"/>
         </StackPanel.Background>
-        <TextBlock Text="This is the statistics view" 
+        <TextBlock Text="Statistics" 
                    HorizontalAlignment="Center" 
                    VerticalAlignment="Center" 
                    FontSize="24"/>
