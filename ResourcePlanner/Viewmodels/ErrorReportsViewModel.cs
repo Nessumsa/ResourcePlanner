@@ -110,6 +110,10 @@ namespace ResourcePlanner.Viewmodels
 
             // Subscribes to user login event to initialize the view.
             LogOnScreenViewModel.UserLoggedIn += InitView;
+
+            //Subscribers to resource deleted event to reinitialize the view.
+            ResourcesViewModel.ResourceDeleted += ResetFields;
+            ResourcesViewModel.ResourceDeleted += PopulateList;
         }
 
         /// <summary>
@@ -126,7 +130,7 @@ namespace ResourcePlanner.Viewmodels
             {
                 SelectedErrorReport = null;
                 ResetFields();
-                await PopulateList();
+                PopulateList();
             }
         }
 
@@ -143,7 +147,7 @@ namespace ResourcePlanner.Viewmodels
         /// <summary>
         /// Initializes the view by setting up the error report handler and populating the error reports list.
         /// </summary>
-        private async void InitView()
+        private void InitView()
         {
             IReadAdapter<Resource, string> resourceAdapter = new ResourceHttpAdapter(RestApiClient.Instance.Client);
             IReadAdapter<User, string> userAdapter = new UserHttpAdapter(RestApiClient.Instance.Client);
@@ -152,13 +156,13 @@ namespace ResourcePlanner.Viewmodels
                                                                                        userAdapter);
             this._errorReportHandler = new ErrorReportHandler(errorReportHttpAdapter);
 
-            await PopulateList();
+            PopulateList();
         }
 
         /// <summary>
         /// Populates the list of active error reports for the current institution.
         /// </summary>
-        private async Task PopulateList()
+        private async void PopulateList()
         {
             if (UserManager.Instance.InstitutionId == null || _errorReportHandler == null)
                 return;

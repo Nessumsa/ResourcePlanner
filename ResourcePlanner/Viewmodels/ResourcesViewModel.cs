@@ -1,13 +1,7 @@
 ﻿using ResourcePlanner.Domain;
 using ResourcePlanner.Infrastructure.Adapters;
 using ResourcePlanner.UseCases;
-using ResourcePlanner.Views;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using ResourcePlanner.Infrastructure.Managers;
@@ -17,6 +11,7 @@ namespace ResourcePlanner.Viewmodels
 {
     class ResourcesViewModel : Bindable
     {
+        public static event Action? ResourceDeleted;
         private ResourceHandler? _resourceHandler;
         private ImageHandler? _imageHandler;
 
@@ -43,7 +38,6 @@ namespace ResourcePlanner.Viewmodels
             get { return _selectedResource; }
             set
             {
-                System.Diagnostics.Debug.WriteLine(UserManager.Instance.InstitutionId);
                 _selectedResource = value;
                 OnPropertyChanged();
                 PopulateResourceProfile();
@@ -124,17 +118,21 @@ namespace ResourcePlanner.Viewmodels
                 return;
 
             // Delete the previous image if it exists.
-            if (!string.IsNullOrEmpty(_selectedResource.ImgPath))
-                await _imageHandler.DeleteImage(_selectedResource.ImgPath);
+            if (!string.IsNullOrEmpty(_selectedResource.ImageUrl))
+                await _imageHandler.DeleteImage(_selectedResource.ImageUrl);
 
             // Upload the new image and update the resource's data.
             var url = await _imageHandler.UploadImage(SelectedImagePath);
             if (url != null)
             {
-                _selectedResource.ImgPath = url;
+                _selectedResource.ImageUrl = url;
                 SelectedImagePath = string.Empty;
 
                 await _resourceHandler.UpdateResource(_selectedResource);
+                MessageBox.Show("Image has been uploaded successfully",
+                                "Success",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.None);
             }
         }
         private bool CanUploadImage()
@@ -171,8 +169,7 @@ namespace ResourcePlanner.Viewmodels
         private bool CanCreate()
         {
             return !string.IsNullOrEmpty(Name) &&
-                   !string.IsNullOrEmpty(Description) &&
-                   !string.IsNullOrEmpty(SelectedImagePath);
+                   !string.IsNullOrEmpty(Description);
         }
         /// <summary>
         /// Function to update the variables of an already existing resource using the handler and adapter
@@ -184,7 +181,7 @@ namespace ResourcePlanner.Viewmodels
 
             SelectedResource.Name = Name;
             SelectedResource.Description = Description;
-            SelectedResource.ImgPath = SelectedImagePath;
+            SelectedResource.ImageUrl = SelectedImagePath;
 
 
             bool resourceUpdated = await _resourceHandler.UpdateResource(SelectedResource);
@@ -206,6 +203,7 @@ namespace ResourcePlanner.Viewmodels
             bool resourceDeleted = await _resourceHandler.DeleteResource(SelectedResource.Id);
             if (resourceDeleted)
             {
+                ResourceDeleted?.Invoke();
                 ResetForm();
                 await PopulateResourceList();
             }
@@ -250,7 +248,7 @@ namespace ResourcePlanner.Viewmodels
 
             Name = SelectedResource.Name ?? string.Empty;
             Description = SelectedResource.Description ?? string.Empty;
-            SelectedImagePath = SelectedResource.ImgPath ?? string.Empty;
+            SelectedImagePath = SelectedResource.ImageUrl ?? string.Empty;
         }
 
         private void ResetFields()
